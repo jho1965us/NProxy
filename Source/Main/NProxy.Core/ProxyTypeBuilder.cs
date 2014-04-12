@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using NProxy.Core.Intercept;
 using NProxy.Core.Internal;
 using NProxy.Core.Internal.Reflection;
 using NProxy.Core.Internal.Reflection.Emit;
@@ -33,17 +34,65 @@ namespace NProxy.Core
     internal sealed class ProxyTypeBuilder : ITypeBuilder
     {
         /// <summary>
-        /// The <c>IInvocationHandler.Invoke</c> method information.
+        /// The <c>IEventInterceptor.Add</c> method information.
         /// </summary>
-        private static readonly MethodInfo InvocationHandlerInvokeMethodInfo = typeof (IInvocationHandler).GetMethod(
-            "Invoke",
+        private static readonly MethodInfo EventInterceptorAddMethodInfo = typeof (IEventInterceptor).GetMethod(
+            "Add",
             BindingFlags.Public | BindingFlags.Instance,
-            typeof (object), typeof (MethodInfo), typeof (object[]));
+            typeof (IEventInvocation));
 
         /// <summary>
-        /// The type repository.
+        /// The <c>IEventInterceptor.Remove</c> method information.
         /// </summary>
-        private readonly ITypeRepository _typeRepository;
+        private static readonly MethodInfo EventInterceptorRemoveMethodInfo = typeof (IEventInterceptor).GetMethod(
+            "Remove",
+            BindingFlags.Public | BindingFlags.Instance,
+            typeof (IEventInvocation));
+
+        /// <summary>
+        /// The <c>IEventInterceptor.Raise</c> method information.
+        /// </summary>
+        private static readonly MethodInfo EventInterceptorRaiseMethodInfo = typeof (IEventInterceptor).GetMethod(
+            "Raise",
+            BindingFlags.Public | BindingFlags.Instance,
+            typeof (IEventInvocation));
+
+        /// <summary>
+        /// The <c>IEventInterceptor.Other</c> method information.
+        /// </summary>
+        private static readonly MethodInfo EventInterceptorOtherMethodInfo = typeof (IEventInterceptor).GetMethod(
+            "Other",
+            BindingFlags.Public | BindingFlags.Instance,
+            typeof (IEventInvocation));
+
+        /// <summary>
+        /// The <c>IPropertyInterceptor.Get</c> method information.
+        /// </summary>
+        private static readonly MethodInfo PropertyInterceptorGetMethodInfo = typeof (IPropertyInterceptor).GetMethod(
+            "Get",
+            BindingFlags.Public | BindingFlags.Instance,
+            typeof (IPropertyInvocation));
+
+        /// <summary>
+        /// The <c>IPropertyInterceptor.Set</c> method information.
+        /// </summary>
+        private static readonly MethodInfo PropertyInterceptorSetMethodInfo = typeof (IPropertyInterceptor).GetMethod(
+            "Set",
+            BindingFlags.Public | BindingFlags.Instance,
+            typeof (IPropertyInvocation));
+
+        /// <summary>
+        /// The <c>IMethodInterceptor.Invoke</c> method information.
+        /// </summary>
+        private static readonly MethodInfo MethodInterceptorInvokeMethodInfo = typeof (IMethodInterceptor).GetMethod(
+            "Invoke",
+            BindingFlags.Public | BindingFlags.Instance,
+            typeof (IMethodInvocation));
+
+        /// <summary>
+        /// The invocation type repository.
+        /// </summary>
+        private readonly IInvocationTypeRepository _invocationTypeRepository;
 
         /// <summary>
         /// The parent type.
@@ -56,9 +105,9 @@ namespace NProxy.Core
         private readonly TypeBuilder _typeBuilder;
 
         /// <summary>
-        /// The invocation handler field information.
+        /// The interceptor field information.
         /// </summary>
-        private readonly FieldInfo _invocationHandlerFieldInfo;
+        private readonly FieldInfo _interceptorFieldInfo;
 
         /// <summary>
         /// The interface types.
@@ -68,12 +117,12 @@ namespace NProxy.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="ProxyTypeBuilder"/> class.
         /// </summary>
-        /// <param name="typeRepository">The type repository.</param>
+        /// <param name="invocationTypeRepository">The invocation type repository.</param>
         /// <param name="parentType">The parent type.</param>
-        public ProxyTypeBuilder(ITypeRepository typeRepository, Type parentType)
+        public ProxyTypeBuilder(IInvocationTypeRepository invocationTypeRepository, Type parentType)
         {
-            if (typeRepository == null)
-                throw new ArgumentNullException("typeRepository");
+            if (invocationTypeRepository == null)
+                throw new ArgumentNullException("invocationTypeRepository");
 
             if (parentType == null)
                 throw new ArgumentNullException("parentType");
@@ -84,17 +133,127 @@ namespace NProxy.Core
             if (parentType.IsGenericTypeDefinition)
                 throw new ArgumentException(Resources.ParentTypeMustNotBeAGenericTypeDefinition, "parentType");
 
-            _typeRepository = typeRepository;
+            _invocationTypeRepository = invocationTypeRepository;
             _parentType = parentType;
 
-            _typeBuilder = typeRepository.DefineType("Proxy", parentType);
+            _typeBuilder = invocationTypeRepository.DefineType("Proxy", parentType);
 
-            _invocationHandlerFieldInfo = _typeBuilder.DefineField(
-                "_invocationHandler",
-                typeof (IInvocationHandler),
+            _interceptorFieldInfo = _typeBuilder.DefineField(
+                "_interceptor",
+                typeof (IMemberInterceptor),
                 FieldAttributes.Private | FieldAttributes.InitOnly);
 
             _interfaceTypes = new HashSet<Type>();
+        }
+
+        /// <summary>
+        /// Defines an event based on the specified event.
+        /// </summary>
+        /// <param name="eventInfo">The event information.</param>
+        /// <param name="isExplicit">A value indicating whether the specified event should be implemented explicitly.</param>
+        /// <returns>The event builder.</returns>
+        private void BuildInterceptedEvent(EventInfo eventInfo, bool isExplicit)
+        {
+            // Define event.
+            var eventName = isExplicit ? eventInfo.GetFullName() : eventInfo.Name;
+
+            var eventBuilder = _typeBuilder.DefineEvent(
+                eventName,
+                eventInfo.Attributes,
+                eventInfo.EventHandlerType);
+
+            // Build event add method.
+            var addMethodInfo = eventInfo.GetAddMethod(true);
+
+            if (addMethodInfo != null)
+            {
+                var invocationType = _invocationTypeRepository.GetType(eventInfo, addMethodInfo);
+                var addMethodBuilder = BuildInterceptedMethod(addMethodInfo, isExplicit, invocationType, EventInterceptorAddMethodInfo);
+
+                eventBuilder.SetAddOnMethod(addMethodBuilder);
+            }
+
+            // Build event remove method.
+            var removeMethodInfo = eventInfo.GetRemoveMethod(true);
+
+            if (removeMethodInfo != null)
+            {
+                var invocationType = _invocationTypeRepository.GetType(eventInfo, removeMethodInfo);
+                var removeMethodBuilder = BuildInterceptedMethod(removeMethodInfo, isExplicit, invocationType, EventInterceptorRemoveMethodInfo);
+
+                eventBuilder.SetRemoveOnMethod(removeMethodBuilder);
+            }
+
+            // Build event raise method.
+            var raiseMethodInfo = eventInfo.GetRaiseMethod(true);
+
+            if (raiseMethodInfo != null)
+            {
+                var invocationType = _invocationTypeRepository.GetType(eventInfo, raiseMethodInfo);
+                var methodBuilder = BuildInterceptedMethod(raiseMethodInfo, isExplicit, invocationType, EventInterceptorRaiseMethodInfo);
+
+                eventBuilder.SetRaiseMethod(methodBuilder);
+            }
+
+            // Build event other methods.
+            var otherMethodInfos = eventInfo.GetOtherMethods(true);
+
+            if (otherMethodInfos != null)
+            {
+                foreach (var otherMethodInfo in otherMethodInfos)
+                {
+                    var invocationType = _invocationTypeRepository.GetType(eventInfo, otherMethodInfo);
+                    var methodBuilder = BuildInterceptedMethod(raiseMethodInfo, isExplicit, invocationType, EventInterceptorOtherMethodInfo);
+
+                    eventBuilder.AddOtherMethod(methodBuilder);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Defines a property based on the specified property.
+        /// </summary>
+        /// <param name="propertyInfo">The property information.</param>
+        /// <param name="isExplicit">A value indicating whether the specified property should be implemented explicitly.</param>
+        /// <returns>The property builder.</returns>
+        private void BuildInterceptedProperty(PropertyInfo propertyInfo, bool isExplicit)
+        {
+            // Define property.
+            var propertyName = isExplicit ? propertyInfo.GetFullName() : propertyInfo.Name;
+            var parameterTypes = propertyInfo.GetIndexParameterTypes();
+
+            var propertyBuilder = _typeBuilder.DefineProperty(
+                propertyName,
+                propertyInfo.Attributes,
+                CallingConventions.HasThis,
+                propertyInfo.PropertyType,
+                null,
+                null,
+                parameterTypes,
+                null,
+                null);
+
+            // Build property get method.
+            var getMethodInfo = propertyInfo.GetGetMethod(true);
+
+            if (getMethodInfo != null)
+            {
+                var invocationType = _invocationTypeRepository.GetType(propertyInfo, getMethodInfo);
+                var methodBuilder = BuildInterceptedMethod(getMethodInfo, isExplicit, invocationType, PropertyInterceptorGetMethodInfo);
+
+                propertyBuilder.SetGetMethod(methodBuilder);
+            }
+
+            // Build property set method.
+            var setMethodInfo = propertyInfo.GetSetMethod(true);
+
+            if (setMethodInfo != null)
+            {
+                var invocationType = _invocationTypeRepository.GetType(propertyInfo, setMethodInfo);
+                var methodBuilder = BuildInterceptedMethod(setMethodInfo, isExplicit, invocationType, PropertyInterceptorSetMethodInfo);
+
+                propertyBuilder.SetSetMethod(methodBuilder);
+            }
         }
 
         /// <summary>
@@ -102,8 +261,10 @@ namespace NProxy.Core
         /// </summary>
         /// <param name="methodInfo">The method information.</param>
         /// <param name="isExplicit">A value indicating whether the specified method should be implemented explicitly.</param>
+        /// <param name="invocationType">The invocation type.</param>
+        /// <param name="interceptorMethodInfo">The interceptor method information.</param>
         /// <returns>The intercepted method builder.</returns>
-        private MethodBuilder BuildInterceptedMethod(MethodInfo methodInfo, bool isExplicit)
+        private MethodBuilder BuildInterceptedMethod(MethodInfo methodInfo, bool isExplicit, Type invocationType, MethodInfo interceptorMethodInfo)
         {
             var isOverride = IsOverrideMember(methodInfo);
 
@@ -132,26 +293,21 @@ namespace NProxy.Core
 
             LoadArguments(ilGenerator, parameterTypes, parametersLocalBuilder);
 
-            // Load invocation handler.
+            // Load interceptor.
             ilGenerator.Emit(OpCodes.Ldarg_0);
-            ilGenerator.Emit(OpCodes.Ldfld, _invocationHandlerFieldInfo);
+            ilGenerator.Emit(OpCodes.Ldfld, _interceptorFieldInfo);
 
-            // Load source object.
-            ilGenerator.Emit(OpCodes.Ldarg_0);
+            // Get invocation constructor.
+            var invocationConstructorInfo = GetInvocationConstructor(invocationType, genericParameterTypes);
 
-            // Get method information constructor.
-            var methodInfoConstructorInfo = GetMethodInfoConstructor(methodInfo, genericParameterTypes);
-
-            // Create and load method information.
+            // Create and load invocation.
             ilGenerator.Emit(OpCodes.Ldarg_0);
             ilGenerator.Emit(isOverride ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
-            ilGenerator.Emit(OpCodes.Newobj, methodInfoConstructorInfo);
-
-            // Load parameters.
             ilGenerator.Emit(OpCodes.Ldloc, parametersLocalBuilder);
+            ilGenerator.Emit(OpCodes.Newobj, invocationConstructorInfo);
 
             // Call invocation handler method.
-            ilGenerator.EmitCall(InvocationHandlerInvokeMethodInfo);
+            ilGenerator.EmitCall(interceptorMethodInfo);
 
             // Restore by reference arguments.
             RestoreByReferenceArguments(ilGenerator, parameterTypes, parametersLocalBuilder);
@@ -170,20 +326,19 @@ namespace NProxy.Core
         }
 
         /// <summary>
-        /// Returns a constructor information for the specified method.
+        /// Returns an invocation constructor information for the specified method.
         /// </summary>
-        /// <param name="methodInfo">The method information.</param>
+        /// <param name="invocationType">The invocation type.</param>
         /// <param name="genericParameterTypes">The generic parameter types.</param>
-        /// <returns>The constructor information.</returns>
-        private ConstructorInfo GetMethodInfoConstructor(MethodInfo methodInfo, Type[] genericParameterTypes)
+        /// <returns>The invocation constructor information.</returns>
+        private ConstructorInfo GetInvocationConstructor(Type invocationType, Type[] genericParameterTypes)
         {
-            var type = _typeRepository.GetType(methodInfo);
-            var constructorInfo = type.GetConstructor(BindingFlags.Public | BindingFlags.Instance, typeof (object), typeof (bool));
+            var constructorInfo = invocationType.GetConstructor(BindingFlags.Public | BindingFlags.Instance, typeof (object), typeof (bool), typeof (object[]));
 
-            if (!type.IsGenericTypeDefinition)
+            if (!invocationType.IsGenericTypeDefinition)
                 return constructorInfo;
 
-            var genericType = type.MakeGenericType(genericParameterTypes);
+            var genericType = invocationType.MakeGenericType(genericParameterTypes);
 
             return TypeBuilder.GetConstructor(genericType, constructorInfo);
         }
@@ -315,8 +470,8 @@ namespace NProxy.Core
             // Define constructor.
             var constructorBuilder = _typeBuilder.DefineConstructor(
                 constructorInfo,
-                new[] {typeof (IInvocationHandler)},
-                new[] {"invocationHandler"});
+                new[] {typeof (IMemberInterceptor)},
+                new[] {"interceptor"});
 
             // Implement constructor.
             var ilGenerator = constructorBuilder.GetILGenerator();
@@ -331,22 +486,22 @@ namespace NProxy.Core
             // Call parent constructor.
             ilGenerator.Emit(OpCodes.Call, constructorInfo);
 
-            // Check for null invocation handler.
-            var invocationHandlerNotNullLabel = ilGenerator.DefineLabel();
+            // Check for null interceptor.
+            var interceptorNotNullLabel = ilGenerator.DefineLabel();
 
             ilGenerator.Emit(OpCodes.Ldarg_1);
-            ilGenerator.Emit(OpCodes.Brtrue, invocationHandlerNotNullLabel);
-            ilGenerator.ThrowException(typeof (ArgumentNullException), "invocationHandler");
-            ilGenerator.MarkLabel(invocationHandlerNotNullLabel);
+            ilGenerator.Emit(OpCodes.Brtrue, interceptorNotNullLabel);
+            ilGenerator.ThrowException(typeof (ArgumentNullException), "interceptor");
+            ilGenerator.MarkLabel(interceptorNotNullLabel);
 
             // Load this reference.
             ilGenerator.Emit(OpCodes.Ldarg_0);
 
-            // Load invocation handler.
+            // Load interceptor.
             ilGenerator.Emit(OpCodes.Ldarg_1);
 
-            // Store invocation handler.
-            ilGenerator.Emit(OpCodes.Stfld, _invocationHandlerFieldInfo);
+            // Store interceptor.
+            ilGenerator.Emit(OpCodes.Stfld, _interceptorFieldInfo);
 
             ilGenerator.Emit(OpCodes.Ret);
         }
@@ -357,7 +512,7 @@ namespace NProxy.Core
             if (eventInfo == null)
                 throw new ArgumentNullException("eventInfo");
 
-            var methodInfos = eventInfo.GetAllAccessors();
+            var methodInfos = eventInfo.GetAccessorMethods();
 
             return methodInfos.All(IsConcreteMethod);
         }
@@ -370,7 +525,7 @@ namespace NProxy.Core
 
             var isExplicit = IsExplicitMember(eventInfo);
 
-            _typeBuilder.DefineEvent(eventInfo, isExplicit, BuildInterceptedMethod);
+            BuildInterceptedEvent(eventInfo, isExplicit);
         }
 
         /// <inheritdoc/>
@@ -379,7 +534,7 @@ namespace NProxy.Core
             if (propertyInfo == null)
                 throw new ArgumentNullException("propertyInfo");
 
-            var methodInfos = propertyInfo.GetAllAccessors();
+            var methodInfos = propertyInfo.GetAccessorMethods();
 
             return methodInfos.All(IsConcreteMethod);
         }
@@ -392,7 +547,7 @@ namespace NProxy.Core
 
             var isExplicit = IsExplicitMember(propertyInfo);
 
-            _typeBuilder.DefineProperty(propertyInfo, isExplicit, BuildInterceptedMethod);
+            BuildInterceptedProperty(propertyInfo, isExplicit);
         }
 
         /// <inheritdoc/>
@@ -411,8 +566,9 @@ namespace NProxy.Core
                 throw new ArgumentNullException("methodInfo");
 
             var isExplicit = IsExplicitMember(methodInfo);
+            var invocationType = _invocationTypeRepository.GetType(methodInfo);
 
-            BuildInterceptedMethod(methodInfo, isExplicit);
+            BuildInterceptedMethod(methodInfo, isExplicit, invocationType, MethodInterceptorInvokeMethodInfo);
         }
 
         /// <inheritdoc/>

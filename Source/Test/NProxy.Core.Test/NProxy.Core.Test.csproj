@@ -38,19 +38,14 @@
     <AssemblyOriginatorKeyFile>..\..\NProxy.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.6.3.13283, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Internal\Caching\CacheTestFixture.cs" />
-    <Compile Include="TargetInvocationHandler.cs" />
-    <Compile Include="GetParametersInvocationHandler.cs" />
-    <Compile Include="SetParametersInvocationHandler.cs" />
-    <Compile Include="SetReturnValueInvocationHandler.cs" />
     <Compile Include="Types\Event.cs" />
     <Compile Include="Types\EventBase.cs" />
     <Compile Include="Types\Generic.cs" />
@@ -84,23 +79,10 @@
     <Compile Include="Types\OutConstructorBase.cs" />
     <Compile Include="Types\RefConstructorBase.cs" />
     <Compile Include="MemberAssert.cs" />
-    <Compile Include="Interceptors\ProxyFactoryTestFixture.cs" />
     <Compile Include="Types\NonIntercepted.cs" />
     <Compile Include="Types\INonIntercepted.cs" />
     <Compile Include="Types\NonInterceptedBase.cs" />
-    <Compile Include="CountingInvocationHandler.cs" />
-    <Compile Include="Interceptors\Types\Employee.cs" />
-    <Compile Include="Interceptors\Types\IEmployee.cs" />
-    <Compile Include="Interceptors\Types\IPerson.cs" />
-    <Compile Include="Interceptors\Types\Person.cs" />
     <Compile Include="ProxyTemplateTestFixture.cs" />
-    <Compile Include="Interceptors\Types\IFoo.cs" />
-    <Compile Include="Interceptors\Types\FooBase.cs" />
-    <Compile Include="Interceptors\Types\Foo.cs" />
-    <Compile Include="Interceptors\Types\IBar.cs" />
-    <Compile Include="Interceptors\Types\Bar.cs" />
-    <Compile Include="Interceptors\Types\FooBar.cs" />
-    <Compile Include="Interceptors\CountingInterceptor.cs" />
     <Compile Include="Internal\Reflection\MethodBaseExtensionsTestFixture.cs" />
     <Compile Include="Internal\Reflection\EventInfoExtensionsTestFixture.cs" />
     <Compile Include="Internal\Reflection\PropertyInfoExtensionsTestFixture.cs" />
@@ -109,14 +91,15 @@
     <Compile Include="ProxyTypeBuilderTestFixture.cs" />
     <Compile Include="Internal\Definitions\ClassProxyDefinitionTestFixture.cs" />
     <Compile Include="Internal\Reflection\MemberTokenTestFixture.cs" />
-    <Compile Include="Interceptors\LazyAttribute.cs" />
-    <Compile Include="Interceptors\LazyInterceptor.cs" />
-    <Compile Include="Interceptors\LazyMixin.cs" />
-    <Compile Include="Interceptors\ILazy.cs" />
     <Compile Include="Internal\Definitions\DelegateProxyDefinitionTestFixture.cs" />
     <Compile Include="Internal\Definitions\InterfaceProxyDefinitionTestFixture.cs" />
     <Compile Include="Internal\Definitions\CollectingProxyDefinitionVisitor.cs" />
     <Compile Include="Internal\Caching\LockOnWriteCacheTestFixture.cs" />
+    <Compile Include="SetParametersMethodInterceptor.cs" />
+    <Compile Include="CountingInterceptor.cs" />
+    <Compile Include="GetParametersInterceptor.cs" />
+    <Compile Include="SetReturnValueInterceptor.cs" />
+    <Compile Include="TargetInterceptor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Main\NProxy.Core\NProxy.Core.csproj">

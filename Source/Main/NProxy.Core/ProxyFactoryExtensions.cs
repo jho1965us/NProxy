@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using NProxy.Core.Intercept;
 
 namespace NProxy.Core
 {
@@ -46,13 +47,13 @@ namespace NProxy.Core
         /// <param name="proxyFactory">The proxy factory.</param>
         /// <param name="declaringType">The declaring type.</param>
         /// <param name="interfaceTypes">The additional interface types.</param>
-        /// <param name="invocationHandler">The invocation handler.</param>
+        /// <param name="interceptor">The interceptor.</param>
         /// <param name="arguments">The constructor arguments.</param>
         /// <returns>The new proxy object.</returns>
         public static object CreateProxy(this IProxyFactory proxyFactory,
             Type declaringType,
             IEnumerable<Type> interfaceTypes,
-            IInvocationHandler invocationHandler,
+            IMemberInterceptor interceptor,
             params object[] arguments)
         {
             if (proxyFactory == null)
@@ -60,7 +61,7 @@ namespace NProxy.Core
 
             var proxyTemplate = proxyFactory.GetProxyTemplate(declaringType, interfaceTypes);
 
-            return proxyTemplate.CreateProxy(invocationHandler, arguments);
+            return proxyTemplate.CreateProxy(interceptor, arguments);
         }
 
         /// <summary>
@@ -69,12 +70,12 @@ namespace NProxy.Core
         /// <typeparam name="T">The declaring type.</typeparam>
         /// <param name="proxyFactory">The proxy factory.</param>
         /// <param name="interfaceTypes">The additional interface types.</param>
-        /// <param name="invocationHandler">The invocation handler.</param>
+        /// <param name="interceptor">The interceptor.</param>
         /// <param name="arguments">The constructor arguments.</param>
         /// <returns>The new proxy object.</returns>
         public static T CreateProxy<T>(this IProxyFactory proxyFactory,
             IEnumerable<Type> interfaceTypes,
-            IInvocationHandler invocationHandler,
+            IMemberInterceptor interceptor,
             params object[] arguments) where T : class
         {
             if (proxyFactory == null)
@@ -82,7 +83,7 @@ namespace NProxy.Core
 
             var proxyTemplate = proxyFactory.GetProxyTemplate<T>(interfaceTypes);
 
-            return proxyTemplate.CreateProxy(invocationHandler, arguments);
+            return proxyTemplate.CreateProxy(interceptor, arguments);
         }
     }
 }

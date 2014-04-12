@@ -32,7 +32,7 @@ namespace NProxy.Core
     /// <summary>
     /// Represents a proxy type builder factory.
     /// </summary>
-    internal sealed class ProxyTypeBuilderFactory : ITypeBuilderFactory, ITypeRepository
+    internal sealed class ProxyTypeBuilderFactory : ITypeBuilderFactory, IInvocationTypeRepository
     {
         /// <summary>
         /// The dynamic assembly name.
@@ -65,14 +65,14 @@ namespace NProxy.Core
         private readonly ModuleBuilder _moduleBuilder;
 
         /// <summary>
-        /// The method information type factory.
+        /// The invocation type factory.
         /// </summary>
-        private readonly ITypeFactory _methodInfoTypeFactory;
+        private readonly IInvocationTypeFactory _invocationTypeFactory;
 
         /// <summary>
-        /// The method information type cache.
+        /// The invocation type cache.
         /// </summary>
-        private readonly ICache<MemberToken, Type> _methodInfoTypeCache;
+        private readonly ICache<MemberToken, Type> _invocationTypeCache;
 
         /// <summary>
         /// The next type identifier.
@@ -88,8 +88,8 @@ namespace NProxy.Core
             _assemblyBuilder = DefineDynamicAssembly(DynamicAssemblyName, canSaveAssembly);
             _moduleBuilder = _assemblyBuilder.DefineDynamicModule(DynamicModuleName);
 
-            _methodInfoTypeFactory = new MethodInfoTypeFactory(this);
-            _methodInfoTypeCache = new Cache<MemberToken, Type>();
+            _invocationTypeFactory = new InvocationTypeFactory(this);
+            _invocationTypeCache = new Cache<MemberToken, Type>();
 
             _nextTypeId = -1;
         }
@@ -192,7 +192,7 @@ namespace NProxy.Core
             _assemblyBuilder.Save(path);
         }
 
-        #region ITypeRepository Members
+        #region IInvocationTypeRepository Members
 
         /// <inheritdoc/>
         public TypeBuilder DefineType(string typeName, Type parentType)
@@ -212,15 +212,26 @@ namespace NProxy.Core
                 parentType);
         }
 
+        public Type GetType(EventInfo eventInfo, MethodInfo methodInfo)
+        {
+            var memberToken = new MemberToken(methodInfo);
+
+            return _invocationTypeCache.GetOrAdd(memberToken, _ => _invocationTypeFactory.CreateType(eventInfo, methodInfo));
+        }
+
+        public Type GetType(PropertyInfo propertyInfo, MethodInfo methodInfo)
+        {
+            var memberToken = new MemberToken(methodInfo);
+
+            return _invocationTypeCache.GetOrAdd(memberToken, _ => _invocationTypeFactory.CreateType(propertyInfo, methodInfo));
+        }
+
         /// <inheritdoc/>
         public Type GetType(MethodInfo methodInfo)
         {
-            if (methodInfo == null)
-                throw new ArgumentNullException("methodInfo");
-
             var memberToken = new MemberToken(methodInfo);
 
-            return _methodInfoTypeCache.GetOrAdd(memberToken, _ => _methodInfoTypeFactory.CreateType(methodInfo));
+            return _invocationTypeCache.GetOrAdd(memberToken, _ => _invocationTypeFactory.CreateType(methodInfo));
         }
 
         #endregion

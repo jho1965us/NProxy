@@ -38,7 +38,7 @@ namespace NProxy.Core.Test
         {
             // Arrange
             var proxyTemplate = _proxyFactory.GetProxyTemplate<IIntParameter>(new[] {typeof (IStringParameter)});
-            var proxy = proxyTemplate.CreateProxy(new TargetInvocationHandler(_ => null));
+            var proxy = proxyTemplate.CreateProxy(new TargetInterceptor(_ => null));
 
             // Act
             var value = proxyTemplate.AdaptProxy<IStringParameter>(proxy);
@@ -53,7 +53,7 @@ namespace NProxy.Core.Test
         {
             // Arrange
             var proxyTemplate = _proxyFactory.GetProxyTemplate<IntParameterBase>(new[] {typeof (IStringParameter)});
-            var proxy = proxyTemplate.CreateProxy(new TargetInvocationHandler(_ => null));
+            var proxy = proxyTemplate.CreateProxy(new TargetInterceptor(_ => null));
 
             // Act
             var value = proxyTemplate.AdaptProxy<IStringParameter>(proxy);
@@ -68,7 +68,7 @@ namespace NProxy.Core.Test
         {
             // Arrange
             var proxyTemplate = _proxyFactory.GetProxyTemplate<IntParameter>(new[] {typeof (IStringParameter)});
-            var proxy = proxyTemplate.CreateProxy(new TargetInvocationHandler(_ => null));
+            var proxy = proxyTemplate.CreateProxy(new TargetInterceptor(_ => null));
 
             // Act
             var value = proxyTemplate.AdaptProxy<IStringParameter>(proxy);
@@ -83,7 +83,7 @@ namespace NProxy.Core.Test
         {
             // Arrange
             var proxyTemplate = _proxyFactory.GetProxyTemplate<Action<int>>(new[] {typeof (IStringParameter)});
-            var proxy = proxyTemplate.CreateProxy(new TargetInvocationHandler(_ => null));
+            var proxy = proxyTemplate.CreateProxy(new TargetInterceptor(_ => null));
 
             // Act
             var value = proxyTemplate.AdaptProxy<IStringParameter>(proxy);
@@ -98,7 +98,7 @@ namespace NProxy.Core.Test
         {
             // Arrange
             var proxyTemplate = _proxyFactory.GetProxyTemplate<IIntParameter>(new[] {typeof (IStringParameter)});
-            var proxy = proxyTemplate.CreateProxy(new TargetInvocationHandler(_ => null));
+            var proxy = proxyTemplate.CreateProxy(new TargetInterceptor(_ => null));
 
             // Act
             // Assert
@@ -110,7 +110,7 @@ namespace NProxy.Core.Test
         {
             // Arrange
             var proxyTemplate = _proxyFactory.GetProxyTemplate<IntParameterBase>(new[] {typeof (IStringParameter)});
-            var proxy = proxyTemplate.CreateProxy(new TargetInvocationHandler(_ => null));
+            var proxy = proxyTemplate.CreateProxy(new TargetInterceptor(_ => null));
 
             // Act
             // Assert
@@ -122,7 +122,7 @@ namespace NProxy.Core.Test
         {
             // Arrange
             var proxyTemplate = _proxyFactory.GetProxyTemplate<IntParameter>(new[] {typeof (IStringParameter)});
-            var proxy = proxyTemplate.CreateProxy(new TargetInvocationHandler(_ => null));
+            var proxy = proxyTemplate.CreateProxy(new TargetInterceptor(_ => null));
 
             // Act
             // Assert
@@ -134,7 +134,7 @@ namespace NProxy.Core.Test
         {
             // Arrange
             var proxyTemplate = _proxyFactory.GetProxyTemplate<Action<int>>(new[] {typeof (IStringParameter)});
-            var proxy = proxyTemplate.CreateProxy(new TargetInvocationHandler(_ => null));
+            var proxy = proxyTemplate.CreateProxy(new TargetInterceptor(_ => null));
 
             // Act
             // Assert

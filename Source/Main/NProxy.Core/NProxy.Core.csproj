@@ -30,8 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>$(OutputPath)NProxy.Core.xml</DocumentationFile>
-    <GenerateDocumentation>True</GenerateDocumentation>
+    <DocumentationFile>bin\Release\NProxy.Core.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -44,9 +43,6 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interceptors\IInterceptionBehavior.cs" />
-    <Compile Include="Interceptors\BaseTargetInterceptor.cs" />
-    <Compile Include="Interceptors\StaticTargetInterceptor.cs" />
     <Compile Include="Internal\Definitions\ClassProxyDefinition.cs" />
     <Compile Include="Internal\Definitions\DelegateProxyDefinition.cs" />
     <Compile Include="Internal\Definitions\InterfaceProxyDefinition.cs" />
@@ -63,28 +59,13 @@
     <Compile Include="ProxyFactoryExtensions.cs" />
     <Compile Include="ProxyTypeBuilderFactory.cs" />
     <Compile Include="ProxyTypeBuilder.cs" />
-    <Compile Include="IInvocationHandler.cs" />
     <Compile Include="Internal\Reflection\EventInfoExtensions.cs" />
     <Compile Include="Internal\Reflection\MethodBaseExtensions.cs" />
     <Compile Include="Internal\Reflection\PropertyInfoExtensions.cs" />
     <Compile Include="Internal\Reflection\TypeExtensions.cs" />
-    <Compile Include="Interceptors\IInterceptor.cs" />
-    <Compile Include="Interceptors\IInvocationContext.cs" />
-    <Compile Include="Interceptors\InvocationContext.cs" />
-    <Compile Include="Interceptors\ProxyFactoryExtensions.cs" />
-    <Compile Include="Interceptors\DynamicTargetInterceptor.cs" />
     <Compile Include="Internal\Caching\AnonymousDisposable.cs" />
     <Compile Include="Internal\Caching\ReadWriteLock.cs" />
-    <Compile Include="Interceptors\MixinInvocationHandler.cs" />
-    <Compile Include="Interceptors\Language\IFluent.cs" />
-    <Compile Include="Interceptors\Language\IExtendWith.cs" />
-    <Compile Include="Interceptors\Language\IImplement.cs" />
-    <Compile Include="Interceptors\Language\IInterceptBy.cs" />
-    <Compile Include="Interceptors\Language\ITarget.cs" />
-    <Compile Include="Interceptors\ICreateProxy.cs" />
-    <Compile Include="Interceptors\CreateProxy.cs" />
     <Compile Include="NonInterceptedAttribute.cs" />
-    <Compile Include="Interceptors\InterceptorInvocationHandler.cs" />
     <Compile Include="ProxyTemplate.cs" />
     <Compile Include="IProxyTemplate.cs" />
     <Compile Include="Internal\Caching\Cache.cs" />
@@ -94,9 +75,6 @@
     <Compile Include="Internal\Definitions\ProxyDefinitionVisitorExtensions.cs" />
     <Compile Include="Internal\Reflection\Emit\ITypeBuilder.cs" />
     <Compile Include="Internal\Reflection\Emit\ITypeBuilderFactory.cs" />
-    <Compile Include="Internal\Reflection\Emit\ITypeRepository.cs" />
-    <Compile Include="Internal\Reflection\Emit\MethodInfoBase.cs" />
-    <Compile Include="Internal\Reflection\Emit\MethodInfoTypeFactory.cs" />
     <Compile Include="IInterceptionFilter.cs" />
     <Compile Include="ProxyGenerator.cs" />
     <Compile Include="NonInterceptedInterceptionFilter.cs" />
@@ -106,7 +84,33 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Internal\Reflection\Emit\ITypeFactory.cs" />
+    <Compile Include="Aop\IAdvice.cs" />
+    <Compile Include="Aop\IAdvisor.cs" />
+    <Compile Include="Aop\IDynamicIntroductionAdvice.cs" />
+    <Compile Include="Aop\IIntroduction.cs" />
+    <Compile Include="Aop\IIntroductionAdvisor.cs" />
+    <Compile Include="Aop\IMethodMatcher.cs" />
+    <Compile Include="Aop\IPointcut.cs" />
+    <Compile Include="Aop\IPointcutAdvisor.cs" />
+    <Compile Include="Aop\ITypeFilter.cs" />
+    <Compile Include="Aop\Support\IntroductionInterceptor.cs" />
+    <Compile Include="Aop\Support\IntroductionSupport.cs" />
+    <Compile Include="Intercept\EventInvocationBase.cs" />
+    <Compile Include="Intercept\IEventInterceptor.cs" />
+    <Compile Include="Intercept\IEventInvocation.cs" />
+    <Compile Include="Intercept\IInterceptor.cs" />
+    <Compile Include="Intercept\IInvocation.cs" />
+    <Compile Include="Intercept\IJoinpoint.cs" />
+    <Compile Include="Intercept\IMethodInterceptor.cs" />
+    <Compile Include="Intercept\IMethodInvocation.cs" />
+    <Compile Include="Intercept\IPropertyInterceptor.cs" />
+    <Compile Include="Intercept\IPropertyInvocation.cs" />
+    <Compile Include="Intercept\MethodInvocationBase.cs" />
+    <Compile Include="Intercept\PropertyInvocationBase.cs" />
+    <Compile Include="InvocationTypeFactory.cs" />
+    <Compile Include="Internal\Reflection\Emit\IInvocationTypeRepository.cs" />
+    <Compile Include="Internal\Reflection\Emit\IInvocationTypeFactory.cs" />
+    <Compile Include="Intercept\IMemberInterceptor.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -129,4 +133,8 @@
     <None Include="NProxy.Core.nuspec" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Aop\" />
+    <Folder Include="Intercept\" />
+  </ItemGroup>
 </Project>

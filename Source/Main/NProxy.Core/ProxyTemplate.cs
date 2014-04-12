@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using NProxy.Core.Intercept;
 using NProxy.Core.Internal;
 using NProxy.Core.Internal.Definitions;
 
@@ -149,15 +150,15 @@ namespace NProxy.Core
         }
 
         /// <inheritdoc/>
-        public object CreateProxy(IInvocationHandler invocationHandler, params object[] arguments)
+        public object CreateProxy(IMemberInterceptor interceptor, params object[] arguments)
         {
-            if (invocationHandler == null)
-                throw new ArgumentNullException("invocationHandler");
+            if (interceptor == null)
+                throw new ArgumentNullException("interceptor");
 
             if (arguments == null)
                 throw new ArgumentNullException("arguments");
 
-            var constructorArguments = new List<object> {invocationHandler};
+            var constructorArguments = new List<object> {interceptor};
 
             constructorArguments.AddRange(arguments);
 
@@ -241,9 +242,9 @@ namespace NProxy.Core
         }
 
         /// <inheritdoc/>
-        object IProxyTemplate.CreateProxy(IInvocationHandler invocationHandler, params object[] arguments)
+        object IProxyTemplate.CreateProxy(IMemberInterceptor interceptor, params object[] arguments)
         {
-            return _proxyTemplate.CreateProxy(invocationHandler, arguments);
+            return _proxyTemplate.CreateProxy(interceptor, arguments);
         }
 
         #endregion
@@ -251,9 +252,9 @@ namespace NProxy.Core
         #region IProxyTemplate<T> Members
 
         /// <inheritdoc/>
-        public T CreateProxy(IInvocationHandler invocationHandler, params object[] arguments)
+        public T CreateProxy(IMemberInterceptor interceptor, params object[] arguments)
         {
-            return (T) _proxyTemplate.CreateProxy(invocationHandler, arguments);
+            return (T) _proxyTemplate.CreateProxy(interceptor, arguments);
         }
 
         #endregion
