@@ -1,4 +1,4 @@
-//
+﻿//
 // NProxy is a library for the .NET framework to create lightweight dynamic proxies.
 // Copyright © Martin Tamme
 //
@@ -21,15 +21,15 @@ using System.Reflection;
 
 namespace NProxy.Core.Aop
 {
-	/// <summary>
-	/// Defines a method matcher.
-	/// </summary>
-	public interface IMethodMatcher
-	{
-		bool IsRuntime { get; }
+    /// <summary>
+    /// Defines a method matcher.
+    /// </summary>
+    public interface IMethodMatcher
+    {
+        bool IsRuntime { get; }
 
-		bool Matches(MethodInfo methodInfo, Type targetType);
+        bool Matches(MethodInfo methodInfo, Type targetType);
 
-		bool Matches(MethodInfo methodInfo, Type targetType, Object[] parameters);
-	}
+        bool Matches(MethodInfo methodInfo, Type targetType, Object[] parameters);
+    }
 }

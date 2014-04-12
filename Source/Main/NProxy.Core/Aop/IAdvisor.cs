@@ -1,4 +1,4 @@
-//
+﻿//
 // NProxy is a library for the .NET framework to create lightweight dynamic proxies.
 // Copyright © Martin Tamme
 //
@@ -20,21 +20,21 @@ using System;
 
 namespace NProxy.Core.Aop
 {
-	/// <summary>
-	/// Defines an advisor.
-	/// </summary>
-	public interface IAdvisor
-	{
-		/// <summary>
-		/// Return whether this advice is associated with a particular instance
-		/// (for example, creating a mixin) or shared with all instances of the
-		/// advised class obtained from the same Spring bean factory.
-		/// </summary>
-		bool IsPerInstance { get; }
+    /// <summary>
+    /// Defines an advisor.
+    /// </summary>
+    public interface IAdvisor
+    {
+        /// <summary>
+        /// Return whether this advice is associated with a particular instance
+        /// (for example, creating a mixin) or shared with all instances of the
+        /// advised class obtained from the same Spring bean factory.
+        /// </summary>
+        bool IsPerInstance { get; }
 
-		/// <summary>
-		///  Return the advice part of this aspect.
-		/// </summary>
-		IAdvice Advice { get; }
-	}
+        /// <summary>
+        ///  Return the advice part of this aspect.
+        /// </summary>
+        IAdvice Advice { get; }
+    }
 }

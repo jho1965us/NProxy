@@ -1,4 +1,4 @@
-//
+﻿//
 // NProxy is a library for the .NET framework to create lightweight dynamic proxies.
 // Copyright © Martin Tamme
 //
@@ -23,63 +23,60 @@ using System.Collections.Generic;
 
 namespace NProxy.Core.Aop.Support
 {
-	public class IntroductionSupport : IIntroduction
-	{
-		private readonly HashSet<Type> _publishedInterfaceTypes;
+    public class IntroductionSupport : IIntroduction
+    {
+        private readonly HashSet<Type> _publishedInterfaceTypes;
 
-		public IntroductionSupport()
-		{
-			_publishedInterfaceTypes = new HashSet<Type>();
-		}
+        public IntroductionSupport()
+        {
+            _publishedInterfaceTypes = new HashSet<Type>();
+        }
 
-		/// <summary>
-		/// Publish all interfaces that the given delegate implements at the proxy level.
-		/// </summary>
-		/// <param name="obj">The delegate object.</param>
-		protected void ImplementInterfacesOnObject(object obj)
-		{
-		}
+        /// <summary>
+        /// Publish all interfaces that the given delegate implements at the proxy level.
+        /// </summary>
+        /// <param name="obj">The delegate object.</param>
+        protected void ImplementInterfacesOnObject(object obj)
+        {
+        }
 
-		/// <summary>
-		/// Is this method on an introduced interface?
-		/// </summary>
-		/// <param name="invocation">The method invocation.</param>
-		/// <returns>Whether the invoked method is on an introduced interface.</returns>
-		protected bool IsMethodOnIntroducedInterface(IMethodInvocation invocation)
-		{
-			return false;
-		}
+        /// <summary>
+        /// Is this method on an introduced interface?
+        /// </summary>
+        /// <param name="invocation">The method invocation.</param>
+        /// <returns>Whether the invoked method is on an introduced interface.</returns>
+        protected bool IsMethodOnIntroducedInterface(IMethodInvocation invocation)
+        {
+            return false;
+        }
 
-		/// <summary>
-		/// Check whether the specified interfaces is a published introduction interface.
-		/// </summary>
-		/// <param name="interfaceType">The interface types.</param>
-		/// <returns>Whether the interface is part of this introduction.</returns>
-		public bool ImplementsInterface(Type interfaceType)
-		{
-			return false;
-		}
+        /// <summary>
+        /// Check whether the specified interfaces is a published introduction interface.
+        /// </summary>
+        /// <param name="interfaceType">The interface types.</param>
+        /// <returns>Whether the interface is part of this introduction.</returns>
+        public bool ImplementsInterface(Type interfaceType)
+        {
+            return false;
+        }
 
-		/// <summary>
-		/// Suppress the specified interface, which may have been autodetected due to the delegate implementing it.
-		/// Call this method to exclude internal interfaces from being visible at the proxy level.
-		/// Does nothing if the interface is not implemented by the delegate.
-		/// </summary>
-		/// <param name="interfaceType">The interface type.</param>
-		public void SuppressInterface(Type interfaceType)
-		{
-		}
+        /// <summary>
+        /// Suppress the specified interface, which may have been autodetected due to the delegate implementing it.
+        /// Call this method to exclude internal interfaces from being visible at the proxy level.
+        /// Does nothing if the interface is not implemented by the delegate.
+        /// </summary>
+        /// <param name="interfaceType">The interface type.</param>
+        public void SuppressInterface(Type interfaceType)
+        {
+        }
 
-		#region IIntroduction Members
+        #region IIntroduction Members
 
-		public Type[] Interfaces
-		{
-			get
-			{
-				throw new NotImplementedException ();
-			}
-		}
+        public Type[] Interfaces
+        {
+            get { throw new NotImplementedException(); }
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

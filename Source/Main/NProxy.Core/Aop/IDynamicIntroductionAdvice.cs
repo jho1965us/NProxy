@@ -1,4 +1,4 @@
-//
+﻿//
 // NProxy is a library for the .NET framework to create lightweight dynamic proxies.
 // Copyright © Martin Tamme
 //
@@ -20,16 +20,16 @@ using System;
 
 namespace NProxy.Core.Aop
 {
-	/// <summary>
-	/// Defines a dynamic introduction advice.
-	/// </summary>
-	public interface IDynamicIntroductionAdvice : IAdvice
-	{
-		/// <summary>
-		/// Does this introduction advice implement the given interface?
-		/// </summary>
-		/// <param name="interfaceType">The interface type.</param>
-		/// <returns>Whether the advice implements the specified interface.</returns>
-		bool ImplementsInterface(Type interfaceType);
-	}
+    /// <summary>
+    /// Defines a dynamic introduction advice.
+    /// </summary>
+    public interface IDynamicIntroductionAdvice : IAdvice
+    {
+        /// <summary>
+        /// Does this introduction advice implement the given interface?
+        /// </summary>
+        /// <param name="interfaceType">The interface type.</param>
+        /// <returns>Whether the advice implements the specified interface.</returns>
+        bool ImplementsInterface(Type interfaceType);
+    }
 }

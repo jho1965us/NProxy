@@ -1,4 +1,4 @@
-//
+﻿//
 // NProxy is a library for the .NET framework to create lightweight dynamic proxies.
 // Copyright © Martin Tamme
 //
@@ -20,18 +20,18 @@ using System;
 
 namespace NProxy.Core.Intercept
 {
-	/// <summary>
-	/// Defines a method interceptor.
-	/// </summary>
-	public interface IMethodInterceptor : IInterceptor
-	{
-		/// <summary>
-		/// Implement this method to perform extra treatments before and after the invocation.
+    /// <summary>
+    /// Defines a method interceptor.
+    /// </summary>
+    public interface IMethodInterceptor : IInterceptor
+    {
+        /// <summary>
+        /// Implement this method to perform extra treatments before and after the invocation.
         /// Polite implementations would certainly like to invoke <see cref="IJoinpoint.Proceed()"/>.
-		/// </summary>
-		/// <param name="invocation">The method invocation joinpoint.</param>
+        /// </summary>
+        /// <param name="invocation">The method invocation joinpoint.</param>
         /// <returns>The result of the call to <see cref="IJoinpoint.Proceed()"/>,
-		/// might be intercepted by the interceptor.</returns>
-		object Invoke(IMethodInvocation invocation);
-	}
+        /// might be intercepted by the interceptor.</returns>
+        object Invoke(IMethodInvocation invocation);
+    }
 }

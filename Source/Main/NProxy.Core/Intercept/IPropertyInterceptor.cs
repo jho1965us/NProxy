@@ -1,4 +1,4 @@
-//
+﻿//
 // NProxy is a library for the .NET framework to create lightweight dynamic proxies.
 // Copyright © Martin Tamme
 //
@@ -20,27 +20,27 @@ using System;
 
 namespace NProxy.Core.Intercept
 {
-	/// <summary>
-	/// Defines a property interceptor.
-	/// </summary>
-	public interface IPropertyInterceptor : IInterceptor
-	{
-		/// <summary>
-		/// Implement this property to perform extra treatments before and after the invocation.
+    /// <summary>
+    /// Defines a property interceptor.
+    /// </summary>
+    public interface IPropertyInterceptor : IInterceptor
+    {
+        /// <summary>
+        /// Implement this property to perform extra treatments before and after the invocation.
         /// Polite implementations would certainly like to invoke <see cref="IJoinpoint.Proceed()"/>.
-		/// </summary>
-		/// <param name="invocation">The property invocation joinpoint.</param>
+        /// </summary>
+        /// <param name="invocation">The property invocation joinpoint.</param>
         /// <returns>The result of the call to <see cref="IJoinpoint.Proceed()"/>,
-		/// might be intercepted by the interceptor.</returns>
+        /// might be intercepted by the interceptor.</returns>
         object Get(IPropertyInvocation invocation);
 
-		/// <summary>
-		/// Implement this property to perform extra treatments before and after the invocation.
+        /// <summary>
+        /// Implement this property to perform extra treatments before and after the invocation.
         /// Polite implementations would certainly like to invoke <see cref="IJoinpoint.Proceed()"/>.
-		/// </summary>
-		/// <param name="invocation">The property invocation joinpoint.</param>
+        /// </summary>
+        /// <param name="invocation">The property invocation joinpoint.</param>
         /// <returns>The result of the call to <see cref="IJoinpoint.Proceed()"/>,
-		/// might be intercepted by the interceptor.</returns>
+        /// might be intercepted by the interceptor.</returns>
         object Set(IPropertyInvocation invocation);
-	}
+    }
 }

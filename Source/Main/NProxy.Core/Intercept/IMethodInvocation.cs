@@ -1,4 +1,4 @@
-//
+﻿//
 // NProxy is a library for the .NET framework to create lightweight dynamic proxies.
 // Copyright © Martin Tamme
 //
@@ -21,14 +21,14 @@ using System.Reflection;
 
 namespace NProxy.Core.Intercept
 {
-	/// <summary>
-	/// Defines a method invocation.
-	/// </summary>
-	public interface IMethodInvocation : IInvocation
-	{
-		/// <summary>
+    /// <summary>
+    /// Defines a method invocation.
+    /// </summary>
+    public interface IMethodInvocation : IInvocation
+    {
+        /// <summary>
         /// Returns the method being called.
-		/// </summary>
-		MethodInfo Method { get; }
-	}
+        /// </summary>
+        MethodInfo Method { get; }
+    }
 }

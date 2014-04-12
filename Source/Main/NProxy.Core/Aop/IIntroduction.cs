@@ -1,4 +1,4 @@
-//
+﻿//
 // NProxy is a library for the .NET framework to create lightweight dynamic proxies.
 // Copyright © Martin Tamme
 //
@@ -20,14 +20,14 @@ using System;
 
 namespace NProxy.Core.Aop
 {
-	/// <summary>
-	/// Defines an introduction.
-	/// </summary>
-	public interface IIntroduction
-	{
-		/// <summary>
-		/// Return the additional interfaces introduced by this advisor or advice.
-		/// </summary>
-		Type[] Interfaces { get; }
-	}
+    /// <summary>
+    /// Defines an introduction.
+    /// </summary>
+    public interface IIntroduction
+    {
+        /// <summary>
+        /// Return the additional interfaces introduced by this advisor or advice.
+        /// </summary>
+        Type[] Interfaces { get; }
+    }
 }

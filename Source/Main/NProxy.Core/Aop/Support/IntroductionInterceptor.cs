@@ -1,4 +1,4 @@
-//
+﻿//
 // NProxy is a library for the .NET framework to create lightweight dynamic proxies.
 // Copyright © Martin Tamme
 //
@@ -22,10 +22,10 @@ using NProxy.Core.Intercept;
 
 namespace NProxy.Core.Aop.Support
 {
-	/// <summary>
-	/// Defines an introduction interceptor.
-	/// </summary>
-	public interface IntroductionInterceptor : IDynamicIntroductionAdvice, IMethodInterceptor
-	{
-	}
+    /// <summary>
+    /// Defines an introduction interceptor.
+    /// </summary>
+    public interface IntroductionInterceptor : IDynamicIntroductionAdvice, IMethodInterceptor
+    {
+    }
 }

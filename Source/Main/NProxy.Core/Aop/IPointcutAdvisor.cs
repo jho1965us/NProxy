@@ -1,4 +1,4 @@
-//
+﻿//
 // NProxy is a library for the .NET framework to create lightweight dynamic proxies.
 // Copyright © Martin Tamme
 //
@@ -20,14 +20,14 @@ using System;
 
 namespace NProxy.Core.Aop
 {
-	/// <summary>
-	/// Defines a pointcut advisor.
-	/// </summary>
-	public interface IPointcutAdvisor
-	{
-		/// <summary>
-		/// Returns the pointcut that drives this advisor.
-		/// </summary>
-		IPointcut IPointcut { get; }
-	}
+    /// <summary>
+    /// Defines a pointcut advisor.
+    /// </summary>
+    public interface IPointcutAdvisor
+    {
+        /// <summary>
+        /// Returns the pointcut that drives this advisor.
+        /// </summary>
+        IPointcut IPointcut { get; }
+    }
 }

@@ -1,4 +1,4 @@
-//
+﻿//
 // NProxy is a library for the .NET framework to create lightweight dynamic proxies.
 // Copyright © Martin Tamme
 //
@@ -21,26 +21,26 @@ using System.Reflection;
 
 namespace NProxy.Core.Intercept
 {
-	/// <summary>
-	/// Defines a joinpoint.
-	/// </summary>
-	public interface IJoinpoint
-	{
-		/// <summary>
-		/// Returns the static part of this joinpoint.
-		/// </summary>
-		MemberInfo StaticPart { get; }
+    /// <summary>
+    /// Defines a joinpoint.
+    /// </summary>
+    public interface IJoinpoint
+    {
+        /// <summary>
+        /// Returns the static part of this joinpoint.
+        /// </summary>
+        MemberInfo StaticPart { get; }
 
-		/// <summary>
-		/// Returns the object that holds the current joinpoint's static part. 
-		/// </summary>
-		object This { get; }
+        /// <summary>
+        /// Returns the object that holds the current joinpoint's static part. 
+        /// </summary>
+        object This { get; }
 
-		/// <summary>
-		/// Proceeds to the next interceptor in the chain.
-		/// </summary>
-		/// <returns>See the children interfaces' proceed definition.</returns>
-		object Proceed();
+        /// <summary>
+        /// Proceeds to the next interceptor in the chain.
+        /// </summary>
+        /// <returns>See the children interfaces' proceed definition.</returns>
+        object Proceed();
 
         /// <summary>
         /// Proceeds to the next interceptor in the chain.
@@ -48,5 +48,5 @@ namespace NProxy.Core.Intercept
         /// <param name="target">The target object.</param>
         /// <returns>See the children interfaces' proceed definition.</returns>
         object Proceed(object target);
-	}
+    }
 }
