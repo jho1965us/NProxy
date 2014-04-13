@@ -79,9 +79,6 @@
     <Compile Include="Types\OutConstructorBase.cs" />
     <Compile Include="Types\RefConstructorBase.cs" />
     <Compile Include="MemberAssert.cs" />
-    <Compile Include="Types\NonIntercepted.cs" />
-    <Compile Include="Types\INonIntercepted.cs" />
-    <Compile Include="Types\NonInterceptedBase.cs" />
     <Compile Include="ProxyTemplateTestFixture.cs" />
     <Compile Include="Internal\Reflection\MethodBaseExtensionsTestFixture.cs" />
     <Compile Include="Internal\Reflection\EventInfoExtensionsTestFixture.cs" />

@@ -65,7 +65,6 @@
     <Compile Include="Internal\Reflection\TypeExtensions.cs" />
     <Compile Include="Internal\Caching\AnonymousDisposable.cs" />
     <Compile Include="Internal\Caching\ReadWriteLock.cs" />
-    <Compile Include="NonInterceptedAttribute.cs" />
     <Compile Include="ProxyTemplate.cs" />
     <Compile Include="IProxyTemplate.cs" />
     <Compile Include="Internal\Caching\Cache.cs" />
@@ -77,7 +76,7 @@
     <Compile Include="Internal\Reflection\Emit\ITypeBuilderFactory.cs" />
     <Compile Include="IInterceptionFilter.cs" />
     <Compile Include="ProxyGenerator.cs" />
-    <Compile Include="NonInterceptedInterceptionFilter.cs" />
+    <Compile Include="DefaultInterceptionFilter.cs" />
     <Compile Include="ProxyTemplateExtensions.cs" />
     <Compile Include="Internal\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

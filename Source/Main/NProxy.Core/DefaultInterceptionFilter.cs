@@ -22,9 +22,9 @@ using System.Reflection;
 namespace NProxy.Core
 {
     /// <summary>
-    /// Represents an non-intercepted interception filter.
+    /// Represents the default interception filter.
     /// </summary>
-    internal sealed class NonInterceptedInterceptionFilter : IInterceptionFilter
+    internal sealed class DefaultInterceptionFilter : IInterceptionFilter
     {
         /// <summary>
         /// The name of the destructor method.
@@ -36,21 +36,18 @@ namespace NProxy.Core
         /// <inheritdoc/>
         public bool AcceptEvent(EventInfo eventInfo)
         {
-            return !eventInfo.IsDefined(typeof (NonInterceptedAttribute), false);
+            return true;
         }
 
         /// <inheritdoc/>
         public bool AcceptProperty(PropertyInfo propertyInfo)
         {
-            return !propertyInfo.IsDefined(typeof (NonInterceptedAttribute), false);
+            return true;
         }
 
         /// <inheritdoc/>
         public bool AcceptMethod(MethodInfo methodInfo)
         {
-            if (methodInfo.IsDefined(typeof (NonInterceptedAttribute), false))
-                return false;
-
             // Don't intercept the destructor method.
             if (methodInfo.DeclaringType != typeof (object))
                 return true;
