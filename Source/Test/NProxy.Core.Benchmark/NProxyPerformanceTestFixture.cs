@@ -89,9 +89,9 @@ namespace NProxy.Core.Benchmark
         public void ProxyInstantiationTest(int iterations)
         {
             var interceptor = new NProxyInterceptor(new Standard());
-            var proxyFactory = new ProxyRepository();
+            var proxyRepository = new ProxyRepository();
             var stopwatch = new Stopwatch();
-            var proxyFactory = proxyFactory.GetProxyFactory<IStandard>(Type.EmptyTypes);
+            var proxyFactory = proxyRepository.GetProxyFactory<IStandard>(Type.EmptyTypes);
 
             stopwatch.Start();
 
@@ -109,9 +109,9 @@ namespace NProxy.Core.Benchmark
         public void ProxyInstantiationWithGenericParameterTest(int iterations)
         {
             var interceptor = new NProxyInterceptor(new Generic());
-            var proxyFactory = new ProxyRepository();
+            var proxyRepository = new ProxyRepository();
             var stopwatch = new Stopwatch();
-            var proxyFactory = proxyFactory.GetProxyFactory<IGeneric>(Type.EmptyTypes);
+            var proxyFactory = proxyRepository.GetProxyFactory<IGeneric>(Type.EmptyTypes);
 
             stopwatch.Start();
 

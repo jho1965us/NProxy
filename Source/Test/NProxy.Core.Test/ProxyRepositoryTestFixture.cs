@@ -35,7 +35,7 @@ namespace NProxy.Core.Test
         public void SetUp()
         {
             _proxyTypeBuilderFactory = new ProxyTypeBuilderFactory(true);
-            _proxyRepository = new ProxyRepository(_proxyTypeBuilderFactory, new DefaultInterceptionFilter());
+            _proxyRepository = new ProxyRepository(_proxyTypeBuilderFactory, DefaultInterceptionFilter.Instance);
         }
 
         [TestFixtureTearDown]
