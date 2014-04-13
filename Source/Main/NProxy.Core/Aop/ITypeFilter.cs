@@ -25,6 +25,11 @@ namespace NProxy.Core.Aop
     /// </summary>
     public interface ITypeFilter
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         bool Matches(Type type);
     }
 }

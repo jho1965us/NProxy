@@ -82,7 +82,7 @@ namespace NProxy.Core
         private readonly IInvocationTypeRepository _typeRepository;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MethodInfoTypeFactory"/> class.
+        /// Initializes a new instance of the <see cref="InvocationTypeFactory"/> class.
         /// </summary>
         /// <param name="typeRepository">The type repository.</param>
         public InvocationTypeFactory(IInvocationTypeRepository typeRepository)
@@ -133,6 +133,7 @@ namespace NProxy.Core
         /// Builds the constructor.
         /// </summary>
         /// <param name="typeBuilder">The type builder.</param>
+        /// <param name="name">The event name.</param>
         /// <param name="methodFieldInfo">The method information static field information.</param>
         /// <returns>The constructor information.</returns>
         private static void BuildEventConstructor(TypeBuilder typeBuilder, string name, FieldInfo methodFieldInfo)
@@ -175,6 +176,7 @@ namespace NProxy.Core
         /// Builds the constructor.
         /// </summary>
         /// <param name="typeBuilder">The type builder.</param>
+        /// <param name="name">The property name.</param>
         /// <param name="methodFieldInfo">The method information static field information.</param>
         /// <returns>The constructor information.</returns>
         private static void BuildPropertyConstructor(TypeBuilder typeBuilder, string name, FieldInfo methodFieldInfo)

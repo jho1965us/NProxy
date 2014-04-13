@@ -93,7 +93,7 @@
     <Compile Include="Aop\IPointcut.cs" />
     <Compile Include="Aop\IPointcutAdvisor.cs" />
     <Compile Include="Aop\ITypeFilter.cs" />
-    <Compile Include="Aop\Support\IntroductionInterceptor.cs" />
+    <Compile Include="Aop\Support\IIntroductionInterceptor.cs" />
     <Compile Include="Aop\Support\IntroductionSupport.cs" />
     <Compile Include="Intercept\EventInvocationBase.cs" />
     <Compile Include="Intercept\IEventInterceptor.cs" />
@@ -134,8 +134,5 @@
     <None Include="NProxy.Core.nuspec" />
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="Aop\" />
-    <Folder Include="Intercept\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

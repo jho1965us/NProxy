@@ -18,16 +18,24 @@
 
 using System;
 using System.Linq;
-using NProxy.Core.Aop;
 using NProxy.Core.Intercept;
 using System.Collections.Generic;
 
 namespace NProxy.Core.Aop.Support
 {
+    /// <summary>
+    /// Represents an introduction support.
+    /// </summary>
     public class IntroductionSupport : IIntroduction
     {
+        /// <summary>
+        /// The published interface types.
+        /// </summary>
         private readonly HashSet<Type> _publishedInterfaceTypes;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IntroductionSupport"/> class.
+        /// </summary>
         public IntroductionSupport()
         {
             _publishedInterfaceTypes = new HashSet<Type>();
@@ -95,6 +103,7 @@ namespace NProxy.Core.Aop.Support
 
         #region IIntroduction Members
 
+        /// <inheritdoc/>
         public Type[] Interfaces
         {
             get { return _publishedInterfaceTypes.ToArray(); }

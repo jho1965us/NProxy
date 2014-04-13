@@ -16,8 +16,6 @@
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 //
 
-using System;
-
 namespace NProxy.Core.Aop
 {
     /// <summary>
@@ -28,6 +26,6 @@ namespace NProxy.Core.Aop
         /// <summary>
         /// Returns the pointcut that drives this advisor.
         /// </summary>
-        IPointcut IPointcut { get; }
+        IPointcut Pointcut { get; }
     }
 }

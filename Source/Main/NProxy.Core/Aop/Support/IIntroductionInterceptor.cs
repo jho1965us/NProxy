@@ -16,8 +16,6 @@
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 //
 
-using System;
-using NProxy.Core.Aop;
 using NProxy.Core.Intercept;
 
 namespace NProxy.Core.Aop.Support
@@ -25,7 +23,7 @@ namespace NProxy.Core.Aop.Support
     /// <summary>
     /// Defines an introduction interceptor.
     /// </summary>
-    public interface IntroductionInterceptor : IDynamicIntroductionAdvice, IMethodInterceptor
+    public interface IIntroductionInterceptor : IDynamicIntroductionAdvice, IMethodInterceptor
     {
     }
 }

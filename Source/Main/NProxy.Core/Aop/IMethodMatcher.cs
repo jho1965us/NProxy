@@ -26,10 +26,26 @@ namespace NProxy.Core.Aop
     /// </summary>
     public interface IMethodMatcher
     {
+        /// <summary>
+        /// 
+        /// </summary>
         bool IsRuntime { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="methodInfo"></param>
+        /// <param name="targetType"></param>
+        /// <returns></returns>
         bool Matches(MethodInfo methodInfo, Type targetType);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="methodInfo"></param>
+        /// <param name="targetType"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
         bool Matches(MethodInfo methodInfo, Type targetType, Object[] parameters);
     }
 }

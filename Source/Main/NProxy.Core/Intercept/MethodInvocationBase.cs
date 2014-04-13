@@ -18,7 +18,6 @@
 
 using System;
 using System.Reflection;
-using NProxy.Core;
 using NProxy.Core.Internal;
 
 namespace NProxy.Core.Intercept

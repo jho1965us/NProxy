@@ -16,8 +16,6 @@
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 //
 
-using System;
-
 namespace NProxy.Core.Aop
 {
     /// <summary>
@@ -25,8 +23,14 @@ namespace NProxy.Core.Aop
     /// </summary>
     public interface IPointcut
     {
+        /// <summary>
+        /// 
+        /// </summary>
         ITypeFilter TypeFilter { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         IMethodMatcher MethodMatcher { get; }
     }
 }
