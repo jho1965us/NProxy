@@ -17,6 +17,7 @@
 //
 
 using System;
+using System.Linq;
 using NProxy.Core.Aop;
 using NProxy.Core.Intercept;
 using System.Collections.Generic;
@@ -38,6 +39,16 @@ namespace NProxy.Core.Aop.Support
         /// <param name="obj">The delegate object.</param>
         protected void ImplementInterfacesOnObject(object obj)
         {
+            if (obj == null)
+                throw new ArgumentNullException("obj");
+
+            var type = obj.GetType();
+            var interfaceTypes = type.GetInterfaces();
+
+            foreach (var interfaceType in interfaceTypes)
+            {
+                _publishedInterfaceTypes.Add(interfaceType);
+            }
         }
 
         /// <summary>
@@ -47,7 +58,12 @@ namespace NProxy.Core.Aop.Support
         /// <returns>Whether the invoked method is on an introduced interface.</returns>
         protected bool IsMethodOnIntroducedInterface(IMethodInvocation invocation)
         {
-            return false;
+            if (invocation == null)
+                throw new ArgumentNullException("invocation");
+
+            var declaringType = invocation.Method.DeclaringType;
+
+            return _publishedInterfaceTypes.Contains(declaringType);
         }
 
         /// <summary>
@@ -57,7 +73,10 @@ namespace NProxy.Core.Aop.Support
         /// <returns>Whether the interface is part of this introduction.</returns>
         public bool ImplementsInterface(Type interfaceType)
         {
-            return false;
+            if (interfaceType == null)
+                throw new ArgumentNullException("interfaceType");
+
+            return _publishedInterfaceTypes.Contains(interfaceType);
         }
 
         /// <summary>
@@ -68,13 +87,17 @@ namespace NProxy.Core.Aop.Support
         /// <param name="interfaceType">The interface type.</param>
         public void SuppressInterface(Type interfaceType)
         {
+            if (interfaceType == null)
+                throw new ArgumentNullException("interfaceType");
+
+            _publishedInterfaceTypes.Remove(interfaceType);
         }
 
         #region IIntroduction Members
 
         public Type[] Interfaces
         {
-            get { throw new NotImplementedException(); }
+            get { return _publishedInterfaceTypes.ToArray(); }
         }
 
         #endregion

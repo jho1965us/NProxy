@@ -27,26 +27,26 @@ namespace NProxy.Core.Internal.Reflection.Emit
     internal interface IInvocationTypeFactory
     {
         /// <summary>
-        /// Creates a new invocation type based on the specified method.
+        /// Creates a new invocation type for the specified method.
         /// </summary>
         /// <param name="eventInfo">The event information.</param>
         /// <param name="methodInfo">The method information.</param>
-        /// <returns>The new type.</returns>
-        Type CreateType(EventInfo eventInfo, MethodInfo methodInfo);
+        /// <returns>The new invocation type.</returns>
+        Type CreateInvocationType(EventInfo eventInfo, MethodInfo methodInfo);
 
         /// <summary>
-        /// Creates a new type based on the specified method.
+        /// Creates a new invocation type for the specified method.
         /// </summary>
         /// <param name="propertyInfo">The property information.</param>
         /// <param name="methodInfo">The method information.</param>
-        /// <returns>The new type.</returns>
-        Type CreateType(PropertyInfo propertyInfo, MethodInfo methodInfo);
+        /// <returns>The new invocation type.</returns>
+        Type CreateInvocationType(PropertyInfo propertyInfo, MethodInfo methodInfo);
 
         /// <summary>
-        /// Creates a new type based on the specified method.
+        /// Creates a new invocation type for the specified method.
         /// </summary>
         /// <param name="methodInfo">The method information.</param>
-        /// <returns>The new type.</returns>
-        Type CreateType(MethodInfo methodInfo);
+        /// <returns>The new invocation type.</returns>
+        Type CreateInvocationType(MethodInfo methodInfo);
     }
 }

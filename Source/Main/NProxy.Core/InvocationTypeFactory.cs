@@ -364,7 +364,7 @@ namespace NProxy.Core
         #region IInvocationTypeFactory Members
 
         /// <inheritdoc/>
-        public Type CreateType(EventInfo eventInfo, MethodInfo methodInfo)
+        public Type CreateInvocationType(EventInfo eventInfo, MethodInfo methodInfo)
         {
             if (eventInfo == null)
                 throw new ArgumentNullException("eventInfo");
@@ -401,7 +401,7 @@ namespace NProxy.Core
         }
 
         /// <inheritdoc/>
-        public Type CreateType(PropertyInfo propertyInfo, MethodInfo methodInfo)
+        public Type CreateInvocationType(PropertyInfo propertyInfo, MethodInfo methodInfo)
         {
             if (propertyInfo == null)
                 throw new ArgumentNullException("propertyInfo");
@@ -438,7 +438,7 @@ namespace NProxy.Core
         }
 
         /// <inheritdoc/>
-        public Type CreateType(MethodInfo methodInfo)
+        public Type CreateInvocationType(MethodInfo methodInfo)
         {
             if (methodInfo == null)
                 throw new ArgumentNullException("methodInfo");

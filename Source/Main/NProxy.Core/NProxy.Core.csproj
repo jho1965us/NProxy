@@ -111,6 +111,7 @@
     <Compile Include="Internal\Reflection\Emit\IInvocationTypeRepository.cs" />
     <Compile Include="Internal\Reflection\Emit\IInvocationTypeFactory.cs" />
     <Compile Include="Intercept\IMemberInterceptor.cs" />
+    <Compile Include="Internal\Reflection\Emit\ITypeRepository.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

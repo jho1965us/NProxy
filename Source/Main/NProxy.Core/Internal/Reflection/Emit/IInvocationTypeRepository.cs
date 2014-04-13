@@ -23,39 +23,31 @@ using System.Reflection.Emit;
 namespace NProxy.Core.Internal.Reflection.Emit
 {
     /// <summary>
-    /// Defines a type repository.
+    /// Defines an invocation type repository.
     /// </summary>
-    internal interface IInvocationTypeRepository
+    internal interface IInvocationTypeRepository : ITypeRepository
     {
         /// <summary>
-        /// Constructs a type builder.
-        /// </summary>
-        /// <param name="typeName">The type name.</param>
-        /// <param name="parentType">The parent type.</param>
-        /// <returns>The type builder.</returns>
-        TypeBuilder DefineType(string typeName, Type parentType);
-
-        /// <summary>
-        /// Returns a type for the specified method.
+        /// Returns an invocation type for the specified method.
         /// </summary>
         /// <param name="eventInfo">The event information.</param>
         /// <param name="methodInfo">The method information.</param>
-        /// <returns>The type.</returns>
-        Type GetType(EventInfo eventInfo, MethodInfo methodInfo);
+        /// <returns>The invocation type.</returns>
+        Type GetInvocationType(EventInfo eventInfo, MethodInfo methodInfo);
 
         /// <summary>
-        /// Returns a type for the specified method.
+        /// Returns an invocation type for the specified method.
         /// </summary>
         /// <param name="propertyInfo">The property information.</param>
         /// <param name="methodInfo">The method information.</param>
-        /// <returns>The type.</returns>
-        Type GetType(PropertyInfo propertyInfo, MethodInfo methodInfo);
+        /// <returns>The invocation type.</returns>
+        Type GetInvocationType(PropertyInfo propertyInfo, MethodInfo methodInfo);
 
         /// <summary>
-        /// Returns a type for the specified method.
+        /// Returns an invocation type for the specified method.
         /// </summary>
         /// <param name="methodInfo">The method information.</param>
-        /// <returns>The type.</returns>
-        Type GetType(MethodInfo methodInfo);
+        /// <returns>The invocation type.</returns>
+        Type GetInvocationType(MethodInfo methodInfo);
     }
 }

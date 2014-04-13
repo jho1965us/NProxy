@@ -194,6 +194,32 @@ namespace NProxy.Core
 
         #region IInvocationTypeRepository Members
 
+        public Type GetInvocationType(EventInfo eventInfo, MethodInfo methodInfo)
+        {
+            var memberToken = new MemberToken(methodInfo);
+
+            return _invocationTypeCache.GetOrAdd(memberToken, _ => _invocationTypeFactory.CreateInvocationType(eventInfo, methodInfo));
+        }
+
+        public Type GetInvocationType(PropertyInfo propertyInfo, MethodInfo methodInfo)
+        {
+            var memberToken = new MemberToken(methodInfo);
+
+            return _invocationTypeCache.GetOrAdd(memberToken, _ => _invocationTypeFactory.CreateInvocationType(propertyInfo, methodInfo));
+        }
+
+        /// <inheritdoc/>
+        public Type GetInvocationType(MethodInfo methodInfo)
+        {
+            var memberToken = new MemberToken(methodInfo);
+
+            return _invocationTypeCache.GetOrAdd(memberToken, _ => _invocationTypeFactory.CreateInvocationType(methodInfo));
+        }
+
+        #endregion
+
+        #region ITypeRepository Members
+
         /// <inheritdoc/>
         public TypeBuilder DefineType(string typeName, Type parentType)
         {
@@ -210,28 +236,6 @@ namespace NProxy.Core
                 uniqueTypeName,
                 TypeAttributes.Class | TypeAttributes.NotPublic | TypeAttributes.Sealed | TypeAttributes.Serializable | TypeAttributes.BeforeFieldInit,
                 parentType);
-        }
-
-        public Type GetType(EventInfo eventInfo, MethodInfo methodInfo)
-        {
-            var memberToken = new MemberToken(methodInfo);
-
-            return _invocationTypeCache.GetOrAdd(memberToken, _ => _invocationTypeFactory.CreateType(eventInfo, methodInfo));
-        }
-
-        public Type GetType(PropertyInfo propertyInfo, MethodInfo methodInfo)
-        {
-            var memberToken = new MemberToken(methodInfo);
-
-            return _invocationTypeCache.GetOrAdd(memberToken, _ => _invocationTypeFactory.CreateType(propertyInfo, methodInfo));
-        }
-
-        /// <inheritdoc/>
-        public Type GetType(MethodInfo methodInfo)
-        {
-            var memberToken = new MemberToken(methodInfo);
-
-            return _invocationTypeCache.GetOrAdd(memberToken, _ => _invocationTypeFactory.CreateType(methodInfo));
         }
 
         #endregion

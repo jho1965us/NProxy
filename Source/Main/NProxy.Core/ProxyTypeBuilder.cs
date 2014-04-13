@@ -167,7 +167,7 @@ namespace NProxy.Core
 
             if (addMethodInfo != null)
             {
-                var invocationType = _invocationTypeRepository.GetType(eventInfo, addMethodInfo);
+                var invocationType = _invocationTypeRepository.GetInvocationType(eventInfo, addMethodInfo);
                 var addMethodBuilder = BuildInterceptedMethod(addMethodInfo, isExplicit, invocationType, EventInterceptorAddMethodInfo);
 
                 eventBuilder.SetAddOnMethod(addMethodBuilder);
@@ -178,7 +178,7 @@ namespace NProxy.Core
 
             if (removeMethodInfo != null)
             {
-                var invocationType = _invocationTypeRepository.GetType(eventInfo, removeMethodInfo);
+                var invocationType = _invocationTypeRepository.GetInvocationType(eventInfo, removeMethodInfo);
                 var removeMethodBuilder = BuildInterceptedMethod(removeMethodInfo, isExplicit, invocationType, EventInterceptorRemoveMethodInfo);
 
                 eventBuilder.SetRemoveOnMethod(removeMethodBuilder);
@@ -189,7 +189,7 @@ namespace NProxy.Core
 
             if (raiseMethodInfo != null)
             {
-                var invocationType = _invocationTypeRepository.GetType(eventInfo, raiseMethodInfo);
+                var invocationType = _invocationTypeRepository.GetInvocationType(eventInfo, raiseMethodInfo);
                 var methodBuilder = BuildInterceptedMethod(raiseMethodInfo, isExplicit, invocationType, EventInterceptorRaiseMethodInfo);
 
                 eventBuilder.SetRaiseMethod(methodBuilder);
@@ -202,7 +202,7 @@ namespace NProxy.Core
             {
                 foreach (var otherMethodInfo in otherMethodInfos)
                 {
-                    var invocationType = _invocationTypeRepository.GetType(eventInfo, otherMethodInfo);
+                    var invocationType = _invocationTypeRepository.GetInvocationType(eventInfo, otherMethodInfo);
                     var methodBuilder = BuildInterceptedMethod(raiseMethodInfo, isExplicit, invocationType, EventInterceptorOtherMethodInfo);
 
                     eventBuilder.AddOtherMethod(methodBuilder);
@@ -238,7 +238,7 @@ namespace NProxy.Core
 
             if (getMethodInfo != null)
             {
-                var invocationType = _invocationTypeRepository.GetType(propertyInfo, getMethodInfo);
+                var invocationType = _invocationTypeRepository.GetInvocationType(propertyInfo, getMethodInfo);
                 var methodBuilder = BuildInterceptedMethod(getMethodInfo, isExplicit, invocationType, PropertyInterceptorGetMethodInfo);
 
                 propertyBuilder.SetGetMethod(methodBuilder);
@@ -249,7 +249,7 @@ namespace NProxy.Core
 
             if (setMethodInfo != null)
             {
-                var invocationType = _invocationTypeRepository.GetType(propertyInfo, setMethodInfo);
+                var invocationType = _invocationTypeRepository.GetInvocationType(propertyInfo, setMethodInfo);
                 var methodBuilder = BuildInterceptedMethod(setMethodInfo, isExplicit, invocationType, PropertyInterceptorSetMethodInfo);
 
                 propertyBuilder.SetSetMethod(methodBuilder);
@@ -566,7 +566,7 @@ namespace NProxy.Core
                 throw new ArgumentNullException("methodInfo");
 
             var isExplicit = IsExplicitMember(methodInfo);
-            var invocationType = _invocationTypeRepository.GetType(methodInfo);
+            var invocationType = _invocationTypeRepository.GetInvocationType(methodInfo);
 
             BuildInterceptedMethod(methodInfo, isExplicit, invocationType, MethodInterceptorInvokeMethodInfo);
         }
