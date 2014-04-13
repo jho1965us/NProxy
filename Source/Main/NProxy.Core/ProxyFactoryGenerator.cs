@@ -25,9 +25,9 @@ using NProxy.Core.Internal.Reflection.Emit;
 namespace NProxy.Core
 {
     /// <summary>
-    /// Represents the proxy generator.
+    /// Represents the proxy factory generator.
     /// </summary>
-    internal sealed class ProxyGenerator : IProxyDefinitionVisitor
+    internal sealed class ProxyFactoryGenerator : IProxyDefinitionVisitor
     {
         /// <summary>
         /// The type builder.
@@ -55,11 +55,11 @@ namespace NProxy.Core
         private readonly List<MethodInfo> _methodInfos;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProxyGenerator"/> class.
+        /// Initializes a new instance of the <see cref="ProxyFactoryGenerator"/> class.
         /// </summary>
         /// <param name="typeBuilder">The type builder.</param>
         /// <param name="interceptionFilter">The interception filter.</param>
-        public ProxyGenerator(ITypeBuilder typeBuilder, IInterceptionFilter interceptionFilter)
+        public ProxyFactoryGenerator(ITypeBuilder typeBuilder, IInterceptionFilter interceptionFilter)
         {
             if (typeBuilder == null)
                 throw new ArgumentNullException("typeBuilder");
@@ -76,11 +76,11 @@ namespace NProxy.Core
         }
 
         /// <summary>
-        /// Generates a proxy template based on the specified proxy definition.
+        /// Generates a proxy factory based on the specified proxy definition.
         /// </summary>
         /// <param name="proxyDefinition">The proxy definition.</param>
-        /// <returns>The proxy template.</returns>
-        public IProxyTemplate GenerateProxyTemplate(IProxyDefinition proxyDefinition)
+        /// <returns>The proxy factory.</returns>
+        public IProxyFactory GenerateProxyFactory(IProxyDefinition proxyDefinition)
         {
             if (proxyDefinition == null)
                 throw new ArgumentNullException("proxyDefinition");
@@ -91,7 +91,7 @@ namespace NProxy.Core
             // Create type.
             var type = _typeBuilder.CreateType();
 
-            return new ProxyTemplate(proxyDefinition, type, _eventInfos, _propertyInfos, _methodInfos);
+            return new ProxyFactory(proxyDefinition, type, _eventInfos, _propertyInfos, _methodInfos);
         }
 
         #region IProxyDefinitionVisitor Members

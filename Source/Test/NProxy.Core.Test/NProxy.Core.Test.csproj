@@ -70,7 +70,7 @@
     <Compile Include="Types\StructType.cs" />
     <Compile Include="Types\IParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProxyFactoryTestFixture.cs" />
+    <Compile Include="ProxyRepositoryTestFixture.cs" />
     <Compile Include="Types\IConstructor.cs" />
     <Compile Include="Types\ConstructorBase.cs" />
     <Compile Include="Types\Constructor.cs" />
@@ -79,7 +79,7 @@
     <Compile Include="Types\OutConstructorBase.cs" />
     <Compile Include="Types\RefConstructorBase.cs" />
     <Compile Include="MemberAssert.cs" />
-    <Compile Include="ProxyTemplateTestFixture.cs" />
+    <Compile Include="ProxyFactoryTestFixture.cs" />
     <Compile Include="Internal\Reflection\MethodBaseExtensionsTestFixture.cs" />
     <Compile Include="Internal\Reflection\EventInfoExtensionsTestFixture.cs" />
     <Compile Include="Internal\Reflection\PropertyInfoExtensionsTestFixture.cs" />

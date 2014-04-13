@@ -1,4 +1,4 @@
-//
+﻿//
 // NProxy is a library for the .NET framework to create lightweight dynamic proxies.
 // Copyright © Martin Tamme
 //
@@ -16,25 +16,22 @@
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 //
 
+using System;
+using System.Collections.Generic;
+
 namespace NProxy.Core
 {
     /// <summary>
-    /// Provides <see cref="IProxyTemplate"/> extension methods.
+    /// Defines a proxy repository.
     /// </summary>
-    public static class ProxyTemplateExtensions
+    public interface IProxyRepository
     {
         /// <summary>
-        /// Adapts a proxy to the specified interface type.
+        /// Returns a proxy factory.
         /// </summary>
-        /// <typeparam name="TInterface">The interface type.</typeparam>
-        /// <param name="proxyTemplate">The proxy template.</param>
-        /// <param name="proxy">The proxy object.</param>
-        /// <returns>The object, of the specified interface type, to which the proxy object has been adapted.</returns>
-        public static TInterface AdaptProxy<TInterface>(this IProxyTemplate proxyTemplate, object proxy) where TInterface : class
-        {
-            var interfaceType = typeof (TInterface);
-
-            return (TInterface) proxyTemplate.AdaptProxy(interfaceType, proxy);
-        }
+        /// <param name="declaringType">The declaring type.</param>
+        /// <param name="interfaceTypes">The additional interface types.</param>
+        /// <returns>The proxy factory.</returns>
+        IProxyFactory GetProxyFactory(Type declaringType, IEnumerable<Type> interfaceTypes);
     }
 }

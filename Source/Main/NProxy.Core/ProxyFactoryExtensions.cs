@@ -1,4 +1,4 @@
-﻿//
+//
 // NProxy is a library for the .NET framework to create lightweight dynamic proxies.
 // Copyright © Martin Tamme
 //
@@ -16,10 +16,6 @@
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 //
 
-using System;
-using System.Collections.Generic;
-using NProxy.Core.Intercept;
-
 namespace NProxy.Core
 {
     /// <summary>
@@ -28,62 +24,17 @@ namespace NProxy.Core
     public static class ProxyFactoryExtensions
     {
         /// <summary>
-        /// Returns a proxy template.
+        /// Adapts a proxy to the specified interface type.
         /// </summary>
-        /// <typeparam name="T">The declaring type.</typeparam>
+        /// <typeparam name="TInterface">The interface type.</typeparam>
         /// <param name="proxyFactory">The proxy factory.</param>
-        /// <param name="interfaceTypes">The additional interface types.</param>
-        /// <returns>The proxy template.</returns>
-        public static IProxyTemplate<T> GetProxyTemplate<T>(this IProxyFactory proxyFactory, IEnumerable<Type> interfaceTypes) where T : class
+        /// <param name="proxy">The proxy object.</param>
+        /// <returns>The object, of the specified interface type, to which the proxy object has been adapted.</returns>
+        public static TInterface AdaptProxy<TInterface>(this IProxyFactory proxyFactory, object proxy) where TInterface : class
         {
-            var proxyTemplate = proxyFactory.GetProxyTemplate(typeof (T), interfaceTypes);
+            var interfaceType = typeof (TInterface);
 
-            return new ProxyTemplate<T>(proxyTemplate);
-        }
-
-        /// <summary>
-        /// Creates a new proxy.
-        /// </summary>
-        /// <param name="proxyFactory">The proxy factory.</param>
-        /// <param name="declaringType">The declaring type.</param>
-        /// <param name="interfaceTypes">The additional interface types.</param>
-        /// <param name="interceptor">The interceptor.</param>
-        /// <param name="arguments">The constructor arguments.</param>
-        /// <returns>The new proxy object.</returns>
-        public static object CreateProxy(this IProxyFactory proxyFactory,
-            Type declaringType,
-            IEnumerable<Type> interfaceTypes,
-            IMemberInterceptor interceptor,
-            params object[] arguments)
-        {
-            if (proxyFactory == null)
-                throw new ArgumentNullException("proxyFactory");
-
-            var proxyTemplate = proxyFactory.GetProxyTemplate(declaringType, interfaceTypes);
-
-            return proxyTemplate.CreateProxy(interceptor, arguments);
-        }
-
-        /// <summary>
-        /// Creates a new proxy.
-        /// </summary>
-        /// <typeparam name="T">The declaring type.</typeparam>
-        /// <param name="proxyFactory">The proxy factory.</param>
-        /// <param name="interfaceTypes">The additional interface types.</param>
-        /// <param name="interceptor">The interceptor.</param>
-        /// <param name="arguments">The constructor arguments.</param>
-        /// <returns>The new proxy object.</returns>
-        public static T CreateProxy<T>(this IProxyFactory proxyFactory,
-            IEnumerable<Type> interfaceTypes,
-            IMemberInterceptor interceptor,
-            params object[] arguments) where T : class
-        {
-            if (proxyFactory == null)
-                throw new ArgumentNullException("proxyFactory");
-
-            var proxyTemplate = proxyFactory.GetProxyTemplate<T>(interfaceTypes);
-
-            return proxyTemplate.CreateProxy(interceptor, arguments);
+            return (TInterface) proxyFactory.AdaptProxy(interfaceType, proxy);
         }
     }
 }

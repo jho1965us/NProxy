@@ -18,115 +18,243 @@
 
 using System;
 using System.Collections.Generic;
-using NProxy.Core.Internal.Caching;
+using System.Reflection;
+using NProxy.Core.Intercept;
+using NProxy.Core.Internal;
 using NProxy.Core.Internal.Definitions;
-using NProxy.Core.Internal.Reflection;
-using NProxy.Core.Internal.Reflection.Emit;
 
 namespace NProxy.Core
 {
     /// <summary>
-    /// Represents the proxy factory.
+    /// Represents a proxy factory.
     /// </summary>
-    public sealed class ProxyFactory : IProxyFactory
+    internal class ProxyFactory : IProxyFactory
     {
         /// <summary>
-        /// The type builder factory.
+        /// The proxy definition.
         /// </summary>
-        private readonly ITypeBuilderFactory _typeBuilderFactory;
+        private readonly IProxyDefinition _proxyDefinition;
 
         /// <summary>
-        /// The interception filter.
+        /// The implementation type.
         /// </summary>
-        private readonly IInterceptionFilter _interceptionFilter;
+        private readonly Type _implementationType;
 
         /// <summary>
-        /// The proxy template cache.
+        /// The event informations.
         /// </summary>
-        private readonly ICache<IProxyDefinition, IProxyTemplate> _proxyTemplateCache;
+        private readonly ICollection<EventInfo> _eventInfos;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProxyFactory"/> class.
+        /// The property informations.
         /// </summary>
-        public ProxyFactory()
-            : this(new DefaultInterceptionFilter())
-        {
-        }
+        private readonly ICollection<PropertyInfo> _propertyInfos;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProxyFactory"/> class.
+        /// The method informations.
         /// </summary>
-        /// <param name="interceptionFilter">The interception filter.</param>
-        public ProxyFactory(IInterceptionFilter interceptionFilter)
-            : this(new ProxyTypeBuilderFactory(false), interceptionFilter)
-        {
-        }
+        private readonly ICollection<MethodInfo> _methodInfos;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProxyFactory"/> class.
-        /// </summary>
-        /// <param name="typeBuilderFactory">The type builder factory.</param>
-        /// <param name="interceptionFilter">The interception filter.</param>
-        internal ProxyFactory(ITypeBuilderFactory typeBuilderFactory, IInterceptionFilter interceptionFilter)
-        {
-            if (typeBuilderFactory == null)
-                throw new ArgumentNullException("typeBuilderFactory");
-
-            if (interceptionFilter == null)
-                throw new ArgumentNullException("interceptionFilter");
-
-            _typeBuilderFactory = typeBuilderFactory;
-            _interceptionFilter = interceptionFilter;
-
-            _proxyTemplateCache = new LockOnWriteCache<IProxyDefinition, IProxyTemplate>();
-        }
-
-        /// <summary>
-        /// Creates a proxy definition for the specified declaring type and interface types.
-        /// </summary>
-        /// <param name="declaringType">The declaring type.</param>
-        /// <param name="interfaceTypes">The interface types.</param>
-        /// <returns>The proxy definition.</returns>
-        private static IProxyDefinition CreateProxyDefinition(Type declaringType, IEnumerable<Type> interfaceTypes)
-        {
-            if (declaringType.IsDelegate())
-                return new DelegateProxyDefinition(declaringType, interfaceTypes);
-
-            if (declaringType.IsInterface)
-                return new InterfaceProxyDefinition(declaringType, interfaceTypes);
-
-            return new ClassProxyDefinition(declaringType, interfaceTypes);
-        }
-
-        /// <summary>
-        /// Generates a proxy template.
         /// </summary>
         /// <param name="proxyDefinition">The proxy definition.</param>
-        /// <returns>The proxy template.</returns>
-        private IProxyTemplate GenerateProxyTemplate(IProxyDefinition proxyDefinition)
+        /// <param name="implementationType">The implementation type.</param>
+        /// <param name="eventInfos">The event informations.</param>
+        /// <param name="propertyInfos">The property informations.</param>
+        /// <param name="methodInfos">The method informations.</param>
+        public ProxyFactory(IProxyDefinition proxyDefinition, Type implementationType, ICollection<EventInfo> eventInfos, ICollection<PropertyInfo> propertyInfos, ICollection<MethodInfo> methodInfos)
         {
-            var typeBuilder = _typeBuilderFactory.CreateBuilder(proxyDefinition.ParentType);
-            var proxyGenerator = new ProxyGenerator(typeBuilder, _interceptionFilter);
+            if (proxyDefinition == null)
+                throw new ArgumentNullException("proxyDefinition");
 
-            return proxyGenerator.GenerateProxyTemplate(proxyDefinition);
+            if (implementationType == null)
+                throw new ArgumentNullException("implementationType");
+
+            if (eventInfos == null)
+                throw new ArgumentNullException("eventInfos");
+
+            if (propertyInfos == null)
+                throw new ArgumentNullException("propertyInfos");
+
+            if (methodInfos == null)
+                throw new ArgumentNullException("methodInfos");
+
+            _proxyDefinition = proxyDefinition;
+            _implementationType = implementationType;
+            _eventInfos = eventInfos;
+            _propertyInfos = propertyInfos;
+            _methodInfos = methodInfos;
         }
 
         #region IProxyFactory Members
 
         /// <inheritdoc/>
-        public IProxyTemplate GetProxyTemplate(Type declaringType, IEnumerable<Type> interfaceTypes)
+        public Type DeclaringType
         {
-            if (declaringType == null)
-                throw new ArgumentNullException("declaringType");
+            get { return _proxyDefinition.DeclaringType; }
+        }
 
-            if (interfaceTypes == null)
-                throw new ArgumentNullException("interfaceTypes");
+        /// <inheritdoc/>
+        public Type ParentType
+        {
+            get { return _proxyDefinition.ParentType; }
+        }
 
-            // Create proxy definition.
-            var proxyDefinition = CreateProxyDefinition(declaringType, interfaceTypes);
+        /// <inheritdoc/>
+        public Type ImplementationType
+        {
+            get { return _implementationType; }
+        }
 
-            // Get or generate proxy template.
-            return _proxyTemplateCache.GetOrAdd(proxyDefinition, GenerateProxyTemplate);
+        /// <inheritdoc/>
+        public IEnumerable<Type> ImplementedInterfaces
+        {
+            get { return _proxyDefinition.ImplementedInterfaces; }
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<EventInfo> InterceptedEvents
+        {
+            get { return _eventInfos; }
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<PropertyInfo> InterceptedProperties
+        {
+            get { return _propertyInfos; }
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<MethodInfo> InterceptedMethods
+        {
+            get { return _methodInfos; }
+        }
+
+        /// <inheritdoc/>
+        public object AdaptProxy(Type interfaceType, object proxy)
+        {
+            if (interfaceType == null)
+                throw new ArgumentNullException("interfaceType");
+
+            if (!interfaceType.IsInterface)
+                throw new ArgumentException(String.Format(Resources.TypeNotAnInterfaceType, interfaceType), "interfaceType");
+
+            var instance = _proxyDefinition.UnwrapProxy(proxy);
+            var instanceType = instance.GetType();
+
+            if ((instanceType != _implementationType) || !interfaceType.IsAssignableFrom(instanceType))
+                throw new InvalidOperationException(Resources.CannotAdaptProxy);
+
+            return instance;
+        }
+
+        /// <inheritdoc/>
+        public object CreateProxy(IMemberInterceptor interceptor, params object[] arguments)
+        {
+            if (interceptor == null)
+                throw new ArgumentNullException("interceptor");
+
+            if (arguments == null)
+                throw new ArgumentNullException("arguments");
+
+            var constructorArguments = new List<object> {interceptor};
+
+            constructorArguments.AddRange(arguments);
+
+            return _proxyDefinition.CreateProxy(_implementationType, constructorArguments.ToArray());
+        }
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Represents a proxy factory.
+    /// </summary>
+    /// <typeparam name="T">The declaring type.</typeparam>
+    internal sealed class ProxyFactory<T> : IProxyFactory<T> where T : class
+    {
+        /// <summary>
+        /// The proxy factory.
+        /// </summary>
+        private readonly IProxyFactory _proxyFactory;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProxyFactory{T}"/> class.
+        /// </summary>
+        /// <param name="proxyFactory">The proxy factory.</param>
+        public ProxyFactory(IProxyFactory proxyFactory)
+        {
+            if (proxyFactory == null)
+                throw new ArgumentNullException("proxyFactory");
+
+            _proxyFactory = proxyFactory;
+        }
+
+        #region IProxyFactory Members
+
+        /// <inheritdoc/>
+        public Type DeclaringType
+        {
+            get { return _proxyFactory.DeclaringType; }
+        }
+
+        /// <inheritdoc/>
+        public Type ParentType
+        {
+            get { return _proxyFactory.ParentType; }
+        }
+
+        /// <inheritdoc/>
+        public Type ImplementationType
+        {
+            get { return _proxyFactory.ImplementationType; }
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<Type> ImplementedInterfaces
+        {
+            get { return _proxyFactory.ImplementedInterfaces; }
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<EventInfo> InterceptedEvents
+        {
+            get { return _proxyFactory.InterceptedEvents; }
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<PropertyInfo> InterceptedProperties
+        {
+            get { return _proxyFactory.InterceptedProperties; }
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<MethodInfo> InterceptedMethods
+        {
+            get { return _proxyFactory.InterceptedMethods; }
+        }
+
+        /// <inheritdoc/>
+        public object AdaptProxy(Type interfaceType, object proxy)
+        {
+            return _proxyFactory.AdaptProxy(interfaceType, proxy);
+        }
+
+        /// <inheritdoc/>
+        object IProxyFactory.CreateProxy(IMemberInterceptor interceptor, params object[] arguments)
+        {
+            return _proxyFactory.CreateProxy(interceptor, arguments);
+        }
+
+        #endregion
+
+        #region IProxyFactory<T> Members
+
+        /// <inheritdoc/>
+        public T CreateProxy(IMemberInterceptor interceptor, params object[] arguments)
+        {
+            return (T) _proxyFactory.CreateProxy(interceptor, arguments);
         }
 
         #endregion

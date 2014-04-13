@@ -52,11 +52,11 @@
     <Compile Include="Internal\Reflection\Emit\MethodBuilderExtensions.cs" />
     <Compile Include="Internal\Reflection\MethodInfoExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="IProxyFactory.cs" />
-    <Compile Include="ProxyFactory.cs" />
+    <Compile Include="IProxyRepository.cs" />
+    <Compile Include="ProxyRepository.cs" />
     <Compile Include="Internal\Reflection\Emit\ILGeneratorExtensions.cs" />
     <Compile Include="Internal\Reflection\Emit\TypeBuilderExtensions.cs" />
-    <Compile Include="ProxyFactoryExtensions.cs" />
+    <Compile Include="ProxyRepositoryExtensions.cs" />
     <Compile Include="ProxyTypeBuilderFactory.cs" />
     <Compile Include="ProxyTypeBuilder.cs" />
     <Compile Include="Internal\Reflection\EventInfoExtensions.cs" />
@@ -65,8 +65,8 @@
     <Compile Include="Internal\Reflection\TypeExtensions.cs" />
     <Compile Include="Internal\Caching\AnonymousDisposable.cs" />
     <Compile Include="Internal\Caching\ReadWriteLock.cs" />
-    <Compile Include="ProxyTemplate.cs" />
-    <Compile Include="IProxyTemplate.cs" />
+    <Compile Include="ProxyFactory.cs" />
+    <Compile Include="IProxyFactory.cs" />
     <Compile Include="Internal\Caching\Cache.cs" />
     <Compile Include="Internal\Caching\ICache.cs" />
     <Compile Include="Internal\Caching\LockOnWriteCache.cs" />
@@ -75,9 +75,9 @@
     <Compile Include="Internal\Reflection\Emit\ITypeBuilder.cs" />
     <Compile Include="Internal\Reflection\Emit\ITypeBuilderFactory.cs" />
     <Compile Include="IInterceptionFilter.cs" />
-    <Compile Include="ProxyGenerator.cs" />
+    <Compile Include="ProxyFactoryGenerator.cs" />
     <Compile Include="DefaultInterceptionFilter.cs" />
-    <Compile Include="ProxyTemplateExtensions.cs" />
+    <Compile Include="ProxyFactoryExtensions.cs" />
     <Compile Include="Internal\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

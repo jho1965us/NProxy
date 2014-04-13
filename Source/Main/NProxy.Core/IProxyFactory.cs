@@ -1,4 +1,4 @@
-﻿//
+//
 // NProxy is a library for the .NET framework to create lightweight dynamic proxies.
 // Copyright © Martin Tamme
 //
@@ -18,6 +18,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using NProxy.Core.Intercept;
 
 namespace NProxy.Core
 {
@@ -27,11 +29,69 @@ namespace NProxy.Core
     public interface IProxyFactory
     {
         /// <summary>
-        /// Returns a proxy template.
+        /// Returns the declaring type.
         /// </summary>
-        /// <param name="declaringType">The declaring type.</param>
-        /// <param name="interfaceTypes">The additional interface types.</param>
-        /// <returns>The proxy template.</returns>
-        IProxyTemplate GetProxyTemplate(Type declaringType, IEnumerable<Type> interfaceTypes);
+        Type DeclaringType { get; }
+
+        /// <summary>
+        /// Returns the parent type.
+        /// </summary>
+        Type ParentType { get; }
+
+        /// <summary>
+        /// Returns the implementation type.
+        /// </summary>
+        Type ImplementationType { get; }
+
+        /// <summary>
+        /// Returns all implemented interfaces.
+        /// </summary>
+        IEnumerable<Type> ImplementedInterfaces { get; }
+
+        /// <summary>
+        /// Returns all intercepted events.
+        /// </summary>
+        IEnumerable<EventInfo> InterceptedEvents { get; }
+
+        /// <summary>
+        /// Returns all intercepted properties.
+        /// </summary>
+        IEnumerable<PropertyInfo> InterceptedProperties { get; }
+
+        /// <summary>
+        /// Returns all intercepted methods.
+        /// </summary>
+        IEnumerable<MethodInfo> InterceptedMethods { get; }
+
+        /// <summary>
+        /// Adapts a proxy to the specified interface type.
+        /// </summary>
+        /// <param name="interfaceType">The interface type.</param>
+        /// <param name="proxy">The proxy object.</param>
+        /// <returns>The object, of the specified interface type, to which the proxy has been adapted.</returns>
+        object AdaptProxy(Type interfaceType, object proxy);
+
+        /// <summary>
+        /// Creates a new proxy.
+        /// </summary>
+        /// <param name="interceptor">The interceptor.</param>
+        /// <param name="arguments">The constructor arguments.</param>
+        /// <returns>The new proxy object.</returns>
+        object CreateProxy(IMemberInterceptor interceptor, params object[] arguments);
+    }
+
+    /// <summary>
+    /// Defines a proxy factory.
+    /// </summary>
+    /// <typeparam name="T">The declaring type.</typeparam>
+    public interface IProxyFactory<out T> : IProxyFactory where T : class
+    {
+        /// <summary>
+        /// Creates a new proxy.
+        /// </summary>
+        /// <param name="interceptor">The interceptor.</param>
+        /// <param name="arguments">The constructor arguments.</param>
+        /// <returns>The new proxy object.</returns>
+        new T CreateProxy(IMemberInterceptor interceptor, params object[] arguments);
     }
 }

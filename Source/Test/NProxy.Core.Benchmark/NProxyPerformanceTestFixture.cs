@@ -32,7 +32,7 @@ namespace NProxy.Core.Benchmark
 
         static NProxyPerformanceTestFixture()
         {
-            var type = typeof (ProxyFactory);
+            var type = typeof (ProxyRepository);
 
             AssemblyName = type.Assembly.GetName();
         }
@@ -42,7 +42,7 @@ namespace NProxy.Core.Benchmark
         {
             // Ensure all classes are loaded and initialized.
             var interceptor = new NProxyInterceptor(new Standard());
-            var proxyFactory = new ProxyFactory();
+            var proxyFactory = new ProxyRepository();
 
             proxyFactory.CreateProxy<IStandard>(Type.EmptyTypes, interceptor);
         }
@@ -54,11 +54,11 @@ namespace NProxy.Core.Benchmark
 
             for (var i = 0; i < iterations; i++)
             {
-                var proxyFactory = new ProxyFactory();
+                var proxyFactory = new ProxyRepository();
 
                 stopwatch.Start();
 
-                proxyFactory.GetProxyTemplate<IStandard>(Type.EmptyTypes);
+                proxyFactory.GetProxyFactory<IStandard>(Type.EmptyTypes);
 
                 stopwatch.Stop();
             }
@@ -73,11 +73,11 @@ namespace NProxy.Core.Benchmark
 
             for (var i = 0; i < iterations; i++)
             {
-                var proxyFactory = new ProxyFactory();
+                var proxyFactory = new ProxyRepository();
 
                 stopwatch.Start();
 
-                proxyFactory.GetProxyTemplate<IGeneric>(Type.EmptyTypes);
+                proxyFactory.GetProxyFactory<IGeneric>(Type.EmptyTypes);
 
                 stopwatch.Stop();
             }
@@ -89,15 +89,15 @@ namespace NProxy.Core.Benchmark
         public void ProxyInstantiationTest(int iterations)
         {
             var interceptor = new NProxyInterceptor(new Standard());
-            var proxyFactory = new ProxyFactory();
+            var proxyFactory = new ProxyRepository();
             var stopwatch = new Stopwatch();
-            var proxyTemplate = proxyFactory.GetProxyTemplate<IStandard>(Type.EmptyTypes);
+            var proxyFactory = proxyFactory.GetProxyFactory<IStandard>(Type.EmptyTypes);
 
             stopwatch.Start();
 
             for (var i = 0; i < iterations; i++)
             {
-                proxyTemplate.CreateProxy(interceptor);
+                proxyFactory.CreateProxy(interceptor);
             }
 
             stopwatch.Stop();
@@ -109,15 +109,15 @@ namespace NProxy.Core.Benchmark
         public void ProxyInstantiationWithGenericParameterTest(int iterations)
         {
             var interceptor = new NProxyInterceptor(new Generic());
-            var proxyFactory = new ProxyFactory();
+            var proxyFactory = new ProxyRepository();
             var stopwatch = new Stopwatch();
-            var proxyTemplate = proxyFactory.GetProxyTemplate<IGeneric>(Type.EmptyTypes);
+            var proxyFactory = proxyFactory.GetProxyFactory<IGeneric>(Type.EmptyTypes);
 
             stopwatch.Start();
 
             for (var i = 0; i < iterations; i++)
             {
-                proxyTemplate.CreateProxy(interceptor);
+                proxyFactory.CreateProxy(interceptor);
             }
 
             stopwatch.Stop();
@@ -129,7 +129,7 @@ namespace NProxy.Core.Benchmark
         public void MethodInvocationTest(int iterations)
         {
             var interceptor = new NProxyInterceptor(new Standard());
-            var proxyFactory = new ProxyFactory();
+            var proxyFactory = new ProxyRepository();
             var proxy = proxyFactory.CreateProxy<IStandard>(Type.EmptyTypes, interceptor);
             var stopwatch = new Stopwatch();
 
@@ -149,7 +149,7 @@ namespace NProxy.Core.Benchmark
         public void MethodInvocationWithGenericParameterTest(int iterations)
         {
             var interceptor = new NProxyInterceptor(new Generic());
-            var proxyFactory = new ProxyFactory();
+            var proxyFactory = new ProxyRepository();
             var proxy = proxyFactory.CreateProxy<IGeneric>(Type.EmptyTypes, interceptor);
             var stopwatch = new Stopwatch();
 
