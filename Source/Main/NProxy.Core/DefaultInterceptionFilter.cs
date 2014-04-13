@@ -22,14 +22,26 @@ using System.Reflection;
 namespace NProxy.Core
 {
     /// <summary>
-    /// Represents the default interception filter.
+    /// Represents an interception filter that accepts all members except the destructor method.
     /// </summary>
     internal sealed class DefaultInterceptionFilter : IInterceptionFilter
     {
         /// <summary>
+        /// The immutable singleton instance.
+        /// </summary>
+        public static readonly DefaultInterceptionFilter Instance = new DefaultInterceptionFilter();
+
+        /// <summary>
         /// The name of the destructor method.
         /// </summary>
         private const string DestructorMethodName = "Finalize";
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultInterceptionFilter"/> class.
+        /// </summary>
+        private DefaultInterceptionFilter()
+        {
+        }
 
         #region IInterceptionFilter Members
 

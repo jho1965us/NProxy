@@ -49,7 +49,7 @@ namespace NProxy.Core
         /// Initializes a new instance of the <see cref="ProxyRepository"/> class.
         /// </summary>
         public ProxyRepository()
-            : this(new DefaultInterceptionFilter())
+            : this(DefaultInterceptionFilter.Instance)
         {
         }
 
