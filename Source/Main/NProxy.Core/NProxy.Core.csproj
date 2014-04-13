@@ -43,6 +43,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aop\IAdvised.cs" />
     <Compile Include="Internal\Definitions\ClassProxyDefinition.cs" />
     <Compile Include="Internal\Definitions\DelegateProxyDefinition.cs" />
     <Compile Include="Internal\Definitions\InterfaceProxyDefinition.cs" />

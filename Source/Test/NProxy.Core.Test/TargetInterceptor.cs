@@ -17,7 +17,6 @@
 //
 
 using System;
-using System.Reflection;
 using NProxy.Core.Intercept;
 
 namespace NProxy.Core.Test
@@ -34,7 +33,7 @@ namespace NProxy.Core.Test
             _targetFactory = targetFactory;
         }
 
-        private object Handle(IInvocation invocation)
+        private object HandleInvocation(IJoinpoint invocation)
         {
             var newTarget = _targetFactory(invocation.This);
 
@@ -45,22 +44,22 @@ namespace NProxy.Core.Test
 
         public object Add(IEventInvocation invocation)
         {
-            return Handle(invocation);
+            return HandleInvocation(invocation);
         }
 
         public object Remove(IEventInvocation invocation)
         {
-            return Handle(invocation);
+            return HandleInvocation(invocation);
         }
 
         public object Raise(IEventInvocation invocation)
         {
-            return Handle(invocation);
+            return HandleInvocation(invocation);
         }
 
         public object Other(IEventInvocation invocation)
         {
-            return Handle(invocation);
+            return HandleInvocation(invocation);
         }
 
         #endregion
@@ -69,12 +68,12 @@ namespace NProxy.Core.Test
 
         public object Get(IPropertyInvocation invocation)
         {
-            return Handle(invocation);
+            return HandleInvocation(invocation);
         }
 
         public object Set(IPropertyInvocation invocation)
         {
-            return Handle(invocation);
+            return HandleInvocation(invocation);
         }
 
         #endregion
@@ -83,7 +82,7 @@ namespace NProxy.Core.Test
 
         public object Invoke(IMethodInvocation invocation)
         {
-            return Handle(invocation);
+            return HandleInvocation(invocation);
         }
 
         #endregion

@@ -16,7 +16,6 @@
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 //
 
-using System.Reflection;
 using NProxy.Core.Intercept;
 
 namespace NProxy.Core.Test
@@ -25,7 +24,7 @@ namespace NProxy.Core.Test
     {
         public int InvocationCount { get; private set; }
 
-        private object Handle(IInvocation invocation)
+        private object HandleInvocation(IInvocation invocation)
         {
             InvocationCount++;
 
@@ -36,22 +35,22 @@ namespace NProxy.Core.Test
 
         public object Add(IEventInvocation invocation)
         {
-            return Handle(invocation);
+            return HandleInvocation(invocation);
         }
 
         public object Remove(IEventInvocation invocation)
         {
-            return Handle(invocation);
+            return HandleInvocation(invocation);
         }
 
         public object Raise(IEventInvocation invocation)
         {
-            return Handle(invocation);
+            return HandleInvocation(invocation);
         }
 
         public object Other(IEventInvocation invocation)
         {
-            return Handle(invocation);
+            return HandleInvocation(invocation);
         }
 
         #endregion
@@ -60,12 +59,12 @@ namespace NProxy.Core.Test
 
         public object Get(IPropertyInvocation invocation)
         {
-            return Handle(invocation);
+            return HandleInvocation(invocation);
         }
 
         public object Set(IPropertyInvocation invocation)
         {
-            return Handle(invocation);
+            return HandleInvocation(invocation);
         }
 
         #endregion
@@ -74,7 +73,7 @@ namespace NProxy.Core.Test
 
         public object Invoke(IMethodInvocation invocation)
         {
-            return Handle(invocation);
+            return HandleInvocation(invocation);
         }
 
         #endregion

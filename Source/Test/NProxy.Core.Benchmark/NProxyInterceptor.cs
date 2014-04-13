@@ -17,7 +17,6 @@
 //
 
 using System;
-using System.Reflection;
 using NProxy.Core.Intercept;
 
 namespace NProxy.Core.Benchmark
@@ -34,31 +33,26 @@ namespace NProxy.Core.Benchmark
             _target = target;
         }
 
-        private object Handle(IInvocation invocation)
-        {
-            return invocation.Proceed(_target);
-        }
-
         #region IEventInterceptor Members
 
         public object Add(IEventInvocation invocation)
         {
-            return Handle(invocation);
+            return invocation.Proceed(_target);
         }
 
         public object Remove(IEventInvocation invocation)
         {
-            return Handle(invocation);
+            return invocation.Proceed(_target);
         }
 
         public object Raise(IEventInvocation invocation)
         {
-            return Handle(invocation);
+            return invocation.Proceed(_target);
         }
 
         public object Other(IEventInvocation invocation)
         {
-            return Handle(invocation);
+            return invocation.Proceed(_target);
         }
 
         #endregion
@@ -67,12 +61,12 @@ namespace NProxy.Core.Benchmark
 
         public object Get(IPropertyInvocation invocation)
         {
-            return Handle(invocation);
+            return invocation.Proceed(_target);
         }
 
         public object Set(IPropertyInvocation invocation)
         {
-            return Handle(invocation);
+            return invocation.Proceed(_target);
         }
 
         #endregion
@@ -81,7 +75,7 @@ namespace NProxy.Core.Benchmark
 
         public object Invoke(IMethodInvocation invocation)
         {
-            return Handle(invocation);
+            return invocation.Proceed(_target);
         }
 
         #endregion
