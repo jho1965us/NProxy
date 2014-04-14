@@ -115,6 +115,6 @@ See [here](https://github.com/mtamme/NProxy/blob/master/Documentation/BENCHMARKS
 
 Copyright © Martin Tamme. See LICENSE for details.
 
-#
+###
 
 ![Powered by ReSharper](http://www.jetbrains.com/resharper/img/rs179x67.gif "Powered by ReSharper")
