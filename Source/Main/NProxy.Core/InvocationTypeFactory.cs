@@ -114,7 +114,7 @@ namespace NProxy.Core
             // Implement type initializer.
             var ilGenerator = typeInitializer.GetILGenerator();
 
-            // Get and load method information.
+			// Get and load target method information.
 			var targetMethodInfo = methodInfo.MapGenericMethod(genericParameterTypes);
 			var declaringType = targetMethodInfo.DeclaringType;
 
@@ -382,7 +382,7 @@ namespace NProxy.Core
 
             // Define method information static field.
             var methodFieldInfo = typeBuilder.DefineField(
-                "Method",
+				"TargetMethod",
                 typeof (MethodInfo),
                 FieldAttributes.Private | FieldAttributes.Static | FieldAttributes.InitOnly);
 
@@ -419,7 +419,7 @@ namespace NProxy.Core
 
             // Define method information static field.
             var methodFieldInfo = typeBuilder.DefineField(
-                "Method",
+				"TargetMethod",
                 typeof (MethodInfo),
                 FieldAttributes.Private | FieldAttributes.Static | FieldAttributes.InitOnly);
 
