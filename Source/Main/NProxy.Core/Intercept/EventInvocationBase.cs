@@ -33,12 +33,12 @@ namespace NProxy.Core.Intercept
         /// Initializes a new instance of the <see cref="EventInvocationBase"/> class.
         /// </summary>
         /// <param name="name">The event name.</param>
-        /// <param name="current">The currently executing object.</param>
+		/// <param name="current">The target object.</param>
         /// <param name="methodInfo">The declaring method information.</param>
         /// <param name="isOverride">A value indicating whether the method is an override.</param>
         /// <param name="parameters">The parameters.</param>
-        protected EventInvocationBase(string name, object current, MethodInfo methodInfo, bool isOverride, object[] parameters)
-            : base(current, methodInfo, isOverride, parameters)
+        protected EventInvocationBase(string name, object target, MethodInfo methodInfo, bool isOverride, object[] parameters)
+            : base(target, methodInfo, isOverride, parameters)
         {
             if (name == null)
                 throw new ArgumentNullException("name");
