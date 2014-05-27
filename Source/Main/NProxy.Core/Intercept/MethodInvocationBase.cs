@@ -26,9 +26,9 @@ namespace NProxy.Core.Intercept
     internal abstract class MethodInvocationBase : IMethodInvocation
     {
         /// <summary>
-		/// The target object.
+        /// The target object.
         /// </summary>
-		private readonly object _target;
+        private readonly object _target;
 
         /// <summary>
         /// The declaring method information.
@@ -53,14 +53,14 @@ namespace NProxy.Core.Intercept
         /// <summary>
         /// Initializes a new instance of the <see cref="MethodInvocationBase"/> class.
         /// </summary>
-		/// <param name="current">The target object.</param>
+        /// <param name="current">The target object.</param>
         /// <param name="methodInfo">The declaring method information.</param>
         /// <param name="isOverride">A value indicating whether the method is an override.</param>
         /// <param name="parameters">The parameters.</param>
-		protected MethodInvocationBase(object target, MethodInfo methodInfo, bool isOverride, object[] parameters)
+        protected MethodInvocationBase(object target, MethodInfo methodInfo, bool isOverride, object[] parameters)
         {
-			if (target == null)
-				throw new ArgumentNullException("target");
+            if (target == null)
+                throw new ArgumentNullException("target");
 
             if (methodInfo == null)
                 throw new ArgumentNullException("methodInfo");
@@ -68,7 +68,7 @@ namespace NProxy.Core.Intercept
             if (parameters == null)
                 throw new ArgumentNullException("parameters");
 
-			_target = target;
+            _target = target;
             _methodInfo = methodInfo;
             _isOverride = isOverride;
             _parameters = parameters;
@@ -126,14 +126,14 @@ namespace NProxy.Core.Intercept
         /// <inheritdoc/>
         public object This
         {
-			get { return _target; }
+            get { return _target; }
         }
 
         /// <inheritdoc/>
         public object Proceed()
         {
             if (_isOverride)
-				return InvokeBase(_target, _parameters);
+                return InvokeBase(_target, _parameters);
 
             throw new TargetException(Resources.MethodNotImplemented);
         }
@@ -142,7 +142,7 @@ namespace NProxy.Core.Intercept
         public object Proceed(object target)
         {
             // Invoke base method when target equals current object.
-			if (ReferenceEquals(target, _target))
+            if (ReferenceEquals(target, _target))
             {
                 if (_isOverride)
                     return InvokeBase(target, _parameters);

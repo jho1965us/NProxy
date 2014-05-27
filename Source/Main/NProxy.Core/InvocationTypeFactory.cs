@@ -141,7 +141,7 @@ namespace NProxy.Core
                 MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName,
                 EventInvocationBaseConstructorInfo.CallingConvention,
                 new[] {typeof (object), typeof (bool), typeof (object[])},
-				new[] {"target", "isOverride", "parameters"});
+                new[] {"target", "isOverride", "parameters"});
 
             // Implement constructor.
             var ilGenerator = constructorBuilder.GetILGenerator();
@@ -152,7 +152,7 @@ namespace NProxy.Core
             // Load name.
             ilGenerator.Emit(OpCodes.Ldstr, name);
 
-			// Load target object.
+            // Load target object.
             ilGenerator.Emit(OpCodes.Ldarg_1);
 
             // Load method information.
@@ -184,7 +184,7 @@ namespace NProxy.Core
                 MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName,
                 PropertyInvocationBaseConstructorInfo.CallingConvention,
                 new[] {typeof (object), typeof (bool), typeof (object[])},
-				new[] {"target", "isOverride", "parameters"});
+                new[] {"target", "isOverride", "parameters"});
 
             // Implement constructor.
             var ilGenerator = constructorBuilder.GetILGenerator();
@@ -195,7 +195,7 @@ namespace NProxy.Core
             // Load name.
             ilGenerator.Emit(OpCodes.Ldstr, name);
 
-			// Load target object.
+            // Load target object.
             ilGenerator.Emit(OpCodes.Ldarg_1);
 
             // Load method information.
@@ -226,7 +226,7 @@ namespace NProxy.Core
                 MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName,
                 MethodInvocationBaseConstructorInfo.CallingConvention,
                 new[] {typeof (object), typeof (bool), typeof (object[])},
-				new[] {"target", "isOverride", "parameters"});
+                new[] {"target", "isOverride", "parameters"});
 
             // Implement constructor.
             var ilGenerator = constructorBuilder.GetILGenerator();
@@ -234,7 +234,7 @@ namespace NProxy.Core
             // Load this reference.
             ilGenerator.Emit(OpCodes.Ldarg_0);
 
-			// Load target object.
+            // Load target object.
             ilGenerator.Emit(OpCodes.Ldarg_1);
 
             // Load method information.
