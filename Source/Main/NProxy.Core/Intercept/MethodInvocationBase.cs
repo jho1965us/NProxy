@@ -53,7 +53,7 @@ namespace NProxy.Core.Intercept
         /// <summary>
         /// Initializes a new instance of the <see cref="MethodInvocationBase"/> class.
         /// </summary>
-        /// <param name="current">The target object.</param>
+        /// <param name="target">The target object.</param>
         /// <param name="methodInfo">The declaring method information.</param>
         /// <param name="isOverride">A value indicating whether the method is an override.</param>
         /// <param name="parameters">The parameters.</param>

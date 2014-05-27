@@ -24,7 +24,7 @@ namespace NProxy.Core.Aop
         /// <summary>
         /// Return whether this advice is associated with a particular instance
         /// (for example, creating a mixin) or shared with all instances of the
-        /// advised class obtained from the same Spring bean factory.
+        /// advised class obtained from the same factory.
         /// </summary>
         bool IsPerInstance { get; }
 
