@@ -1,22 +1,22 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main", "Main", "{5ECA8C5C-8007-448F-80D7-5520C143F329}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NProxy.Core", "Main\NProxy.Core\NProxy.Core.csproj", "{9DCA2B53-06FC-4949-8238-C62957AA428B}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{1BF10CDB-1046-461F-AB4A-2959F1F72929}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NProxy.Core.Benchmark", "Test\NProxy.Core.Benchmark\NProxy.Core.Benchmark.csproj", "{49B33190-2161-4860-B07C-662D0B0E22AB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NProxy.Core.Test", "Test\NProxy.Core.Test\NProxy.Core.Test.csproj", "{921C36E4-1492-418B-A421-C49F6EBBA63E}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7CEB3A89-B641-4A19-A775-681FCB75379C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{22913FDA-9646-4F96-AA04-0DA93DBB9828}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.config = .nuget\NuGet.config
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main", "Main", "{E344B56B-FA49-4EC7-A730-C12767A2BF7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NProxy.Core", "Main\NProxy.Core\NProxy.Core.csproj", "{9DCA2B53-06FC-4949-8238-C62957AA428B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{7627253D-BDE4-4E8B-A5D3-BC150D9496A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NProxy.Core.Benchmark", "Test\NProxy.Core.Benchmark\NProxy.Core.Benchmark.csproj", "{49B33190-2161-4860-B07C-662D0B0E22AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NProxy.Core.Test", "Test\NProxy.Core.Test\NProxy.Core.Test.csproj", "{921C36E4-1492-418B-A421-C49F6EBBA63E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,20 +41,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{9DCA2B53-06FC-4949-8238-C62957AA428B} = {5ECA8C5C-8007-448F-80D7-5520C143F329}
-		{49B33190-2161-4860-B07C-662D0B0E22AB} = {1BF10CDB-1046-461F-AB4A-2959F1F72929}
-		{921C36E4-1492-418B-A421-C49F6EBBA63E} = {1BF10CDB-1046-461F-AB4A-2959F1F72929}
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Main\NProxy.Core\NProxy.Core.csproj
-		Policies = $0
-		$0.TextStylePolicy = $1
-		$1.FileWidth = 120
-		$1.TabsToSpaces = False
-		$1.inheritsSet = VisualStudio
-		$1.inheritsScope = text/plain
-		$0.StandardHeader = $2
-		$2.Text = @\nCopyright © Martin Tamme\n\nLicensed under the Apache License, Version 2.0 (the "License");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an "AS IS" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n
-		$2.IncludeInNewFiles = True
+		{9DCA2B53-06FC-4949-8238-C62957AA428B} = {E344B56B-FA49-4EC7-A730-C12767A2BF7A}
+		{49B33190-2161-4860-B07C-662D0B0E22AB} = {7627253D-BDE4-4E8B-A5D3-BC150D9496A2}
+		{921C36E4-1492-418B-A421-C49F6EBBA63E} = {7627253D-BDE4-4E8B-A5D3-BC150D9496A2}
 	EndGlobalSection
 EndGlobal
