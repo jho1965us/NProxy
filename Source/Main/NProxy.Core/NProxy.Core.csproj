@@ -95,7 +95,11 @@
     <Compile Include="Internal\Reflection\MethodInfoExtensions.cs" />
     <Compile Include="Internal\Reflection\PropertyInfoExtensions.cs" />
     <Compile Include="Internal\Reflection\TypeExtensions.cs" />
-    <Compile Include="Internal\Resources.Designer.cs" />
+    <Compile Include="Internal\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="InvocationTypeFactory.cs" />
     <Compile Include="IProxyFactory.cs" />
     <Compile Include="IProxyRepository.cs" />
