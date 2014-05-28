@@ -23,9 +23,9 @@ using NProxy.Core.Internal.Reflection.Emit;
 namespace NProxy.Core
 {
     /// <summary>
-    /// Represents the proxy factory generator.
+    /// Represents the proxy factory builder.
     /// </summary>
-    internal sealed class ProxyFactoryGenerator : IProxyDefinitionVisitor
+    internal sealed class ProxyFactoryBuilder : IProxyDefinitionVisitor
     {
         /// <summary>
         /// The type builder.
@@ -53,11 +53,11 @@ namespace NProxy.Core
         private readonly List<MethodInfo> _methodInfos;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProxyFactoryGenerator"/> class.
+        /// Initializes a new instance of the <see cref="ProxyFactoryBuilder"/> class.
         /// </summary>
         /// <param name="typeBuilder">The type builder.</param>
         /// <param name="interceptionFilter">The interception filter.</param>
-        public ProxyFactoryGenerator(ITypeBuilder typeBuilder, IInterceptionFilter interceptionFilter)
+        public ProxyFactoryBuilder(ITypeBuilder typeBuilder, IInterceptionFilter interceptionFilter)
         {
             if (typeBuilder == null)
                 throw new ArgumentNullException("typeBuilder");
@@ -74,11 +74,11 @@ namespace NProxy.Core
         }
 
         /// <summary>
-        /// Generates a proxy factory based on the specified proxy definition.
+        /// Creates a proxy factory.
         /// </summary>
         /// <param name="proxyDefinition">The proxy definition.</param>
         /// <returns>The proxy factory.</returns>
-        public IProxyFactory GenerateProxyFactory(IProxyDefinition proxyDefinition)
+        public IProxyFactory CreateProxyFactory(IProxyDefinition proxyDefinition)
         {
             if (proxyDefinition == null)
                 throw new ArgumentNullException("proxyDefinition");

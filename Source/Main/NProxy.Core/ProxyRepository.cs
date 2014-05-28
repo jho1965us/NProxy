@@ -97,16 +97,16 @@ namespace NProxy.Core
         }
 
         /// <summary>
-        /// Generates a proxy factory.
+        /// Creates a proxy factory.
         /// </summary>
         /// <param name="proxyDefinition">The proxy definition.</param>
         /// <returns>The proxy factory.</returns>
-        private IProxyFactory GenerateProxyFactory(IProxyDefinition proxyDefinition)
+        private IProxyFactory CreateProxyFactory(IProxyDefinition proxyDefinition)
         {
             var typeBuilder = _typeBuilderFactory.CreateBuilder(proxyDefinition.ParentType);
-            var proxyFactoryGenerator = new ProxyFactoryGenerator(typeBuilder, _interceptionFilter);
+            var proxyFactoryBuilder = new ProxyFactoryBuilder(typeBuilder, _interceptionFilter);
 
-            return proxyFactoryGenerator.GenerateProxyFactory(proxyDefinition);
+            return proxyFactoryBuilder.CreateProxyFactory(proxyDefinition);
         }
 
         #region IProxyRepository Members
@@ -123,8 +123,8 @@ namespace NProxy.Core
             // Create proxy definition.
             var proxyDefinition = CreateProxyDefinition(declaringType, interfaceTypes);
 
-            // Get or generate proxy factory.
-            return _proxyFactoryCache.GetOrAdd(proxyDefinition, GenerateProxyFactory);
+            // Get or create proxy factory.
+            return _proxyFactoryCache.GetOrAdd(proxyDefinition, CreateProxyFactory);
         }
 
         #endregion
