@@ -14,11 +14,9 @@
 // limitations under the License.
 //
 
-using NProxy.Core.Intercept;
-
 namespace NProxy.Core.Test
 {
-    internal sealed class SetReturnValueInterceptor : IMemberInterceptor
+    internal sealed class SetReturnValueInterceptor : IInterceptor
     {
         private readonly object _returnValue;
 
@@ -27,54 +25,11 @@ namespace NProxy.Core.Test
             _returnValue = returnValue;
         }
 
-        private object HandleInvocation(IInvocation invocation)
+        #region IInterceptor Members
+
+        public object Intercept(IInvocation invocation)
         {
             return _returnValue;
-        }
-
-        #region IEventInterceptor Members
-
-        public object Add(IEventInvocation invocation)
-        {
-            return HandleInvocation(invocation);
-        }
-
-        public object Remove(IEventInvocation invocation)
-        {
-            return HandleInvocation(invocation);
-        }
-
-        public object Raise(IEventInvocation invocation)
-        {
-            return HandleInvocation(invocation);
-        }
-
-        public object Other(IEventInvocation invocation)
-        {
-            return HandleInvocation(invocation);
-        }
-
-        #endregion
-
-        #region IPropertyInterceptor Members
-
-        public object Get(IPropertyInvocation invocation)
-        {
-            return HandleInvocation(invocation);
-        }
-
-        public object Set(IPropertyInvocation invocation)
-        {
-            return HandleInvocation(invocation);
-        }
-
-        #endregion
-
-        #region IMethodInterceptor Members
-
-        public object Invoke(IMethodInvocation invocation)
-        {
-            return HandleInvocation(invocation);
         }
 
         #endregion

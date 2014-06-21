@@ -15,7 +15,6 @@
 //
 
 using System;
-using System.Reflection;
 
 namespace NProxy.Core.Internal.Reflection.Emit
 {
@@ -25,26 +24,10 @@ namespace NProxy.Core.Internal.Reflection.Emit
     internal interface IInvocationTypeFactory
     {
         /// <summary>
-        /// Creates a new invocation type for the specified method.
+        /// Creates a new invocation type for the specified static part.
         /// </summary>
-        /// <param name="eventInfo">The event information.</param>
-        /// <param name="methodInfo">The method information.</param>
+        /// <param name="staticPart">The static part.</param>
         /// <returns>The new invocation type.</returns>
-        Type CreateInvocationType(EventInfo eventInfo, MethodInfo methodInfo);
-
-        /// <summary>
-        /// Creates a new invocation type for the specified method.
-        /// </summary>
-        /// <param name="propertyInfo">The property information.</param>
-        /// <param name="methodInfo">The method information.</param>
-        /// <returns>The new invocation type.</returns>
-        Type CreateInvocationType(PropertyInfo propertyInfo, MethodInfo methodInfo);
-
-        /// <summary>
-        /// Creates a new invocation type for the specified method.
-        /// </summary>
-        /// <param name="methodInfo">The method information.</param>
-        /// <returns>The new invocation type.</returns>
-        Type CreateInvocationType(MethodInfo methodInfo);
+        Type CreateType(IStaticPart staticPart);
     }
 }

@@ -16,9 +16,9 @@
 
 using System.Diagnostics;
 using System.Reflection;
+using LinFu.Proxy.Interfaces;
 using NProxy.Core.Benchmark.Reporting;
 using NProxy.Core.Benchmark.Types;
-using LinFu.Proxy.Interfaces;
 using NUnit.Framework;
 
 namespace NProxy.Core.Benchmark

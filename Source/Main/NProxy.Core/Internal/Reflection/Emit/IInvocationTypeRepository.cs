@@ -15,7 +15,6 @@
 //
 
 using System;
-using System.Reflection;
 
 namespace NProxy.Core.Internal.Reflection.Emit
 {
@@ -25,26 +24,10 @@ namespace NProxy.Core.Internal.Reflection.Emit
     internal interface IInvocationTypeRepository : ITypeRepository
     {
         /// <summary>
-        /// Returns an invocation type for the specified method.
+        /// Returns an invocation type for the specified static part.
         /// </summary>
-        /// <param name="eventInfo">The event information.</param>
-        /// <param name="methodInfo">The method information.</param>
+        /// <param name="staticPart">The static part.</param>
         /// <returns>The invocation type.</returns>
-        Type GetInvocationType(EventInfo eventInfo, MethodInfo methodInfo);
-
-        /// <summary>
-        /// Returns an invocation type for the specified method.
-        /// </summary>
-        /// <param name="propertyInfo">The property information.</param>
-        /// <param name="methodInfo">The method information.</param>
-        /// <returns>The invocation type.</returns>
-        Type GetInvocationType(PropertyInfo propertyInfo, MethodInfo methodInfo);
-
-        /// <summary>
-        /// Returns an invocation type for the specified method.
-        /// </summary>
-        /// <param name="methodInfo">The method information.</param>
-        /// <returns>The invocation type.</returns>
-        Type GetInvocationType(MethodInfo methodInfo);
+        Type GetType(IStaticPart staticPart);
     }
 }

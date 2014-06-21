@@ -14,36 +14,39 @@
 // limitations under the License.
 //
 
-using System.Reflection;
-
-namespace NProxy.Core.Intercept
+namespace NProxy.Core
 {
     /// <summary>
-    /// Defines a joinpoint.
+    /// Defines an invocation.
     /// </summary>
-    public interface IJoinpoint
+    public interface IInvocation
     {
         /// <summary>
-        /// Returns the static part of this joinpoint.
+        /// Returns the static part of this invocation.
         /// </summary>
-        MemberInfo StaticPart { get; }
+        IStaticPart StaticPart { get; }
 
         /// <summary>
-        /// Returns the object that holds the current joinpoint's static part. 
+        /// Returns the object that holds the current invocation's static part. 
         /// </summary>
         object This { get; }
 
         /// <summary>
+        /// Returns the parameters as an object array.
+        /// </summary>
+        object[] Parameters { get; }
+
+        /// <summary>
         /// Proceeds to the next interceptor in the chain.
         /// </summary>
-        /// <returns>See the children interfaces' proceed definition.</returns>
+        /// <returns>The return value.</returns>
         object Proceed();
 
         /// <summary>
         /// Proceeds to the next interceptor in the chain.
         /// </summary>
         /// <param name="target">The target object.</param>
-        /// <returns>See the children interfaces' proceed definition.</returns>
+        /// <returns>The return value.</returns>
         object Proceed(object target);
     }
 }

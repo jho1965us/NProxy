@@ -22,21 +22,21 @@ patterns can be easily implemented using ordinary classes instead of dynamic pro
 dynamic proxy approach is more convenient and compact and can eliminate a lot of handwritten or generated
 classes.
 
-At the heart of the dynamic proxy mechanism is the `IInvocationHandler` interface, shown below.
+At the heart of the dynamic proxy mechanism is the `IInterceptor` interface, shown below.
 
 ```csharp
-public interface IInvocationHandler
+public interface IInterceptor
 {
-    object Invoke(object target, MethodInfo methodInfo, object[] parameters);
+    object Intercept(IInvocation invocation);
 }
 ```
 
-The job of an invocation handler is to actually perform the requested method invocation on behalf of a dynamic
-proxy. The invocation handler is passed a target object, a `MethodInfo` object (from the `System.Reflection` namespace)
-and an array of parameters; in the simplest case, it could simply call the method `MethodInfo.Invoke()` and return the
-result. `MethodInfo.Invoke()` directly invokes the target method without utilizing reflection.
+The job of an interceptor is to actually perform the requested method invocation on behalf of a dynamic
+proxy. The interceptor is passed an invocation; in the simplest case, it could simply call the method
+`IInvocation.Proceed()` and return the result. `IInvocation.Proceed()` directly invokes the target method
+without utilizing reflection.
 
-Every proxy has an associated invocation handler that is called whenever one of the proxy's methods is called.
+Every proxy has an associated interceptor that is called whenever one of the proxy's methods is called.
 Proxies can be created from unsealed classes, abstract classes, interfaces and delegates, and can implement
 an arbitrary number of interfaces. All interfaces are implemented explicitly to avoid member name conflicts.
 

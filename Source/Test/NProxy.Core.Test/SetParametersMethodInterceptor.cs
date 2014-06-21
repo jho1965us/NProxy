@@ -15,64 +15,20 @@
 //
 
 using System;
-using NProxy.Core.Intercept;
 
 namespace NProxy.Core.Test
 {
-    internal sealed class SetParametersMethodInterceptor : IMemberInterceptor
+    internal sealed class SetParametersMethodInterceptor : IInterceptor
     {
         public object[] Parameters { get; set; }
 
-        private object HandleInvocation(IInvocation invocation)
+        #region IInterceptor Members
+
+        public object Intercept(IInvocation invocation)
         {
             Array.Copy(Parameters, invocation.Parameters, invocation.Parameters.Length);
 
             return null;
-        }
-
-        #region IEventInterceptor Members
-
-        public object Add(IEventInvocation invocation)
-        {
-            return HandleInvocation(invocation);
-        }
-
-        public object Remove(IEventInvocation invocation)
-        {
-            return HandleInvocation(invocation);
-        }
-
-        public object Raise(IEventInvocation invocation)
-        {
-            return HandleInvocation(invocation);
-        }
-
-        public object Other(IEventInvocation invocation)
-        {
-            return HandleInvocation(invocation);
-        }
-
-        #endregion
-
-        #region IPropertyInterceptor Members
-
-        public object Get(IPropertyInvocation invocation)
-        {
-            return HandleInvocation(invocation);
-        }
-
-        public object Set(IPropertyInvocation invocation)
-        {
-            return HandleInvocation(invocation);
-        }
-
-        #endregion
-
-        #region IMethodInterceptor Members
-
-        public object Invoke(IMethodInvocation invocation)
-        {
-            return HandleInvocation(invocation);
         }
 
         #endregion

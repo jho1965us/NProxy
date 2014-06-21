@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using NProxy.Core.Intercept;
 using NProxy.Core.Internal;
 using NProxy.Core.Internal.Definitions;
 
@@ -148,7 +147,7 @@ namespace NProxy.Core
         }
 
         /// <inheritdoc/>
-        public object CreateProxy(IMemberInterceptor interceptor, params object[] arguments)
+        public object CreateProxy(IInterceptor interceptor, params object[] arguments)
         {
             if (interceptor == null)
                 throw new ArgumentNullException("interceptor");
@@ -240,7 +239,7 @@ namespace NProxy.Core
         }
 
         /// <inheritdoc/>
-        object IProxyFactory.CreateProxy(IMemberInterceptor interceptor, params object[] arguments)
+        object IProxyFactory.CreateProxy(IInterceptor interceptor, params object[] arguments)
         {
             return _proxyFactory.CreateProxy(interceptor, arguments);
         }
@@ -250,7 +249,7 @@ namespace NProxy.Core
         #region IProxyFactory<T> Members
 
         /// <inheritdoc/>
-        public T CreateProxy(IMemberInterceptor interceptor, params object[] arguments)
+        public T CreateProxy(IInterceptor interceptor, params object[] arguments)
         {
             return (T) _proxyFactory.CreateProxy(interceptor, arguments);
         }

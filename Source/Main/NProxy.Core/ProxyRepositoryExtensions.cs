@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using NProxy.Core.Intercept;
 
 namespace NProxy.Core
 {
@@ -51,7 +50,7 @@ namespace NProxy.Core
         public static object CreateProxy(this IProxyRepository proxyRepository,
             Type declaringType,
             IEnumerable<Type> interfaceTypes,
-            IMemberInterceptor interceptor,
+            IInterceptor interceptor,
             params object[] arguments)
         {
             if (proxyRepository == null)
@@ -73,7 +72,7 @@ namespace NProxy.Core
         /// <returns>The new proxy object.</returns>
         public static T CreateProxy<T>(this IProxyRepository proxyRepository,
             IEnumerable<Type> interfaceTypes,
-            IMemberInterceptor interceptor,
+            IInterceptor interceptor,
             params object[] arguments) where T : class
         {
             if (proxyRepository == null)

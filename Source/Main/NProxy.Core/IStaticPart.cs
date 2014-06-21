@@ -14,17 +14,33 @@
 // limitations under the License.
 //
 
+using System;
 using System.Reflection;
 
-namespace NProxy.Core.Intercept
+namespace NProxy.Core
 {
     /// <summary>
-    /// Defines a method invocation.
+    /// Defines a static part of an invocation.
     /// </summary>
-    public interface IMethodInvocation : IInvocation
+    public interface IStaticPart
     {
         /// <summary>
-        /// Returns the method being called.
+        /// Returns the declaring type.
+        /// </summary>
+        Type DeclaringType { get; }
+
+        /// <summary>
+        /// Returns the declaring name.
+        /// </summary>
+        string DeclaringName { get; }
+
+        /// <summary>
+        /// Returns the method kind.
+        /// </summary>
+        MethodKind MethodKind { get; }
+
+        /// <summary>
+        /// Returns the method information.
         /// </summary>
         MethodInfo Method { get; }
     }

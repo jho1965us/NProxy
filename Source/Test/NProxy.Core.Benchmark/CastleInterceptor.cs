@@ -14,15 +14,13 @@
 // limitations under the License.
 //
 
-using Castle.DynamicProxy;
-
 namespace NProxy.Core.Benchmark
 {
-    internal sealed class CastleInterceptor : IInterceptor
+    internal sealed class CastleInterceptor : Castle.DynamicProxy.IInterceptor
     {
         #region IInterceptor Members
 
-        public void Intercept(IInvocation invocation)
+        public void Intercept(Castle.DynamicProxy.IInvocation invocation)
         {
             invocation.Proceed();
         }

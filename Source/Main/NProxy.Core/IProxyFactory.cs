@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using NProxy.Core.Intercept;
 
 namespace NProxy.Core
 {
@@ -75,7 +74,7 @@ namespace NProxy.Core
         /// <param name="interceptor">The interceptor.</param>
         /// <param name="arguments">The constructor arguments.</param>
         /// <returns>The new proxy object.</returns>
-        object CreateProxy(IMemberInterceptor interceptor, params object[] arguments);
+        object CreateProxy(IInterceptor interceptor, params object[] arguments);
     }
 
     /// <summary>
@@ -90,6 +89,6 @@ namespace NProxy.Core
         /// <param name="interceptor">The interceptor.</param>
         /// <param name="arguments">The constructor arguments.</param>
         /// <returns>The new proxy object.</returns>
-        new T CreateProxy(IMemberInterceptor interceptor, params object[] arguments);
+        new T CreateProxy(IInterceptor interceptor, params object[] arguments);
     }
 }

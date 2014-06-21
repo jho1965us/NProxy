@@ -15,11 +15,10 @@
 //
 
 using System;
-using LinFu.AOP.Interfaces;
 
 namespace NProxy.Core.Benchmark
 {
-    internal sealed class LinFuInterceptor : IInterceptor
+    internal sealed class LinFuInterceptor : LinFu.AOP.Interfaces.IInterceptor
     {
         private readonly object _target;
 
@@ -33,7 +32,7 @@ namespace NProxy.Core.Benchmark
 
         #region IInterceptor Members
 
-        public object Intercept(IInvocationInfo info)
+        public object Intercept(LinFu.AOP.Interfaces.IInvocationInfo info)
         {
             return info.TargetMethod.Invoke(_target, info.Arguments);
         }

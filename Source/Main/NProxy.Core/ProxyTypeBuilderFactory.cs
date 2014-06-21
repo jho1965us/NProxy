@@ -192,26 +192,11 @@ namespace NProxy.Core
 
         #region IInvocationTypeRepository Members
 
-        public Type GetInvocationType(EventInfo eventInfo, MethodInfo methodInfo)
+        public Type GetType(IStaticPart staticPart)
         {
-            var memberToken = new MemberToken(methodInfo);
+            var memberToken = new MemberToken(staticPart.Method);
 
-            return _invocationTypeCache.GetOrAdd(memberToken, _ => _invocationTypeFactory.CreateInvocationType(eventInfo, methodInfo));
-        }
-
-        public Type GetInvocationType(PropertyInfo propertyInfo, MethodInfo methodInfo)
-        {
-            var memberToken = new MemberToken(methodInfo);
-
-            return _invocationTypeCache.GetOrAdd(memberToken, _ => _invocationTypeFactory.CreateInvocationType(propertyInfo, methodInfo));
-        }
-
-        /// <inheritdoc/>
-        public Type GetInvocationType(MethodInfo methodInfo)
-        {
-            var memberToken = new MemberToken(methodInfo);
-
-            return _invocationTypeCache.GetOrAdd(memberToken, _ => _invocationTypeFactory.CreateInvocationType(methodInfo));
+            return _invocationTypeCache.GetOrAdd(memberToken, _ => _invocationTypeFactory.CreateType(staticPart));
         }
 
         #endregion

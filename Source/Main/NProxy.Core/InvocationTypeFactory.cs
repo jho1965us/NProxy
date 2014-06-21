@@ -20,7 +20,6 @@ using System.Reflection;
 using System.Reflection.Emit;
 using NProxy.Core.Internal.Reflection;
 using NProxy.Core.Internal.Reflection.Emit;
-using NProxy.Core.Intercept;
 
 namespace NProxy.Core
 {
@@ -30,46 +29,31 @@ namespace NProxy.Core
     internal sealed class InvocationTypeFactory : IInvocationTypeFactory
     {
         /// <summary>
-        /// The <see cref="MethodBase.GetMethodFromHandle(RuntimeMethodHandle,RuntimeTypeHandle)"/> method information.
+        /// The <see cref="RuntimeStaticPart"/> constructor information.
         /// </summary>
-        private static readonly MethodInfo MethodBaseGetMethodFromHandleMethodInfo = typeof (MethodBase).GetMethod(
-            "GetMethodFromHandle",
-            BindingFlags.Public | BindingFlags.Static,
-            typeof (RuntimeMethodHandle), typeof (RuntimeTypeHandle));
+        private static readonly ConstructorInfo RuntimeStaticPartConstructorInfo = typeof (RuntimeStaticPart).GetConstructor(
+            BindingFlags.Public | BindingFlags.Instance,
+            typeof (string), typeof (MethodKind), typeof (RuntimeTypeHandle), typeof (RuntimeMethodHandle));
 
         /// <summary>
-        /// The <see cref="EventInvocationBase"/> constructor information.
+        /// The <see cref="InvocationBase"/> constructor information.
         /// </summary>
-        private static readonly ConstructorInfo EventInvocationBaseConstructorInfo = typeof (EventInvocationBase).GetConstructor(
+        private static readonly ConstructorInfo InvocationBaseConstructorInfo = typeof (InvocationBase).GetConstructor(
             BindingFlags.NonPublic | BindingFlags.Instance,
-            typeof (string), typeof (object), typeof (MethodInfo), typeof (bool), typeof (object[]));
+            typeof (IStaticPart), typeof (bool), typeof (object), typeof (object[]));
 
         /// <summary>
-        /// The <see cref="PropertyInvocationBase"/> constructor information.
+        /// The <see cref="InvocationBase.InvokeBase(object,object[])"/> method information.
         /// </summary>
-        private static readonly ConstructorInfo PropertyInvocationBaseConstructorInfo = typeof (PropertyInvocationBase).GetConstructor(
-            BindingFlags.NonPublic | BindingFlags.Instance,
-            typeof (string), typeof (object), typeof (MethodInfo), typeof (bool), typeof (object[]));
-
-        /// <summary>
-        /// The <see cref="MethodInvocationBase"/> constructor information.
-        /// </summary>
-        private static readonly ConstructorInfo MethodInvocationBaseConstructorInfo = typeof (MethodInvocationBase).GetConstructor(
-            BindingFlags.NonPublic | BindingFlags.Instance,
-            typeof (object), typeof (MethodInfo), typeof (bool), typeof (object[]));
-
-        /// <summary>
-        /// The <see cref="MethodInvocationBase.InvokeBase(object,object[])"/> method information.
-        /// </summary>
-        private static readonly MethodInfo MethodInvocationBaseInvokeBaseMethodInfo = typeof (MethodInvocationBase).GetMethod(
+        private static readonly MethodInfo InvocationBaseInvokeBaseMethodInfo = typeof (InvocationBase).GetMethod(
             "InvokeBase",
             BindingFlags.NonPublic | BindingFlags.Instance,
             typeof (object), typeof (object[]));
 
         /// <summary>
-        /// The <see cref="MethodInvocationBase.InvokeVirtual(object,object[])"/> method information.
+        /// The <see cref="InvocationBase.InvokeVirtual(object,object[])"/> method information.
         /// </summary>
-        private static readonly MethodInfo MethodInvocationBaseInvokeVirtualMethodInfo = typeof (MethodInvocationBase).GetMethod(
+        private static readonly MethodInfo InvocationBaseInvokeVirtualMethodInfo = typeof (InvocationBase).GetMethod(
             "InvokeVirtual",
             BindingFlags.NonPublic | BindingFlags.Instance,
             typeof (object), typeof (object[]));
@@ -95,13 +79,13 @@ namespace NProxy.Core
         /// Builds the type initializer.
         /// </summary>
         /// <param name="typeBuilder">The type builder.</param>
-        /// <param name="methodInfo">The method information.</param>
+        /// <param name="staticPart">The static part.</param>
         /// <param name="genericParameterTypes">The generic parameter types.</param>
-        /// <param name="methodFieldInfo">The method information static field information.</param>
+        /// <param name="staticPartFieldInfo">The static part field information.</param>
         private static void BuildTypeInitializer(TypeBuilder typeBuilder,
-            MethodInfo methodInfo,
+            IStaticPart staticPart,
             Type[] genericParameterTypes,
-            FieldInfo methodFieldInfo)
+            FieldInfo staticPartFieldInfo)
         {
             // Define type initializer.
             var typeInitializer = typeBuilder.DefineConstructor(
@@ -112,60 +96,18 @@ namespace NProxy.Core
             // Implement type initializer.
             var ilGenerator = typeInitializer.GetILGenerator();
 
-            // Get and load target method information.
-            var targetMethodInfo = methodInfo.MapGenericMethod(genericParameterTypes);
+            // Create and load the static part.
+            var targetMethodInfo = staticPart.Method.MapGenericMethod(genericParameterTypes);
             var declaringType = targetMethodInfo.DeclaringType;
 
-            ilGenerator.Emit(OpCodes.Ldtoken, targetMethodInfo);
+            ilGenerator.Emit(OpCodes.Ldstr, staticPart.DeclaringName);
+            ilGenerator.EmitLoadValue((int) staticPart.MethodKind);
             ilGenerator.Emit(OpCodes.Ldtoken, declaringType);
-            ilGenerator.EmitCall(MethodBaseGetMethodFromHandleMethodInfo);
+            ilGenerator.Emit(OpCodes.Ldtoken, targetMethodInfo);
+            ilGenerator.Emit(OpCodes.Newobj, RuntimeStaticPartConstructorInfo);
 
-            // Store method information.
-            ilGenerator.Emit(OpCodes.Castclass, typeof (MethodInfo));
-            ilGenerator.Emit(OpCodes.Stsfld, methodFieldInfo);
-
-            ilGenerator.Emit(OpCodes.Ret);
-        }
-
-        /// <summary>
-        /// Builds the constructor.
-        /// </summary>
-        /// <param name="typeBuilder">The type builder.</param>
-        /// <param name="name">The event name.</param>
-        /// <param name="methodFieldInfo">The method information static field information.</param>
-        /// <returns>The constructor information.</returns>
-        private static void BuildEventConstructor(TypeBuilder typeBuilder, string name, FieldInfo methodFieldInfo)
-        {
-            // Define constructor.
-            var constructorBuilder = typeBuilder.DefineConstructor(
-                MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName,
-                EventInvocationBaseConstructorInfo.CallingConvention,
-                new[] {typeof (object), typeof (bool), typeof (object[])},
-                new[] {"target", "isOverride", "parameters"});
-
-            // Implement constructor.
-            var ilGenerator = constructorBuilder.GetILGenerator();
-
-            // Load this reference.
-            ilGenerator.Emit(OpCodes.Ldarg_0);
-
-            // Load name.
-            ilGenerator.Emit(OpCodes.Ldstr, name);
-
-            // Load target object.
-            ilGenerator.Emit(OpCodes.Ldarg_1);
-
-            // Load method information.
-            ilGenerator.Emit(OpCodes.Ldsfld, methodFieldInfo);
-
-            // Load override flag.
-            ilGenerator.Emit(OpCodes.Ldarg_2);
-
-            // Load parameters.
-            ilGenerator.Emit(OpCodes.Ldarg_3);
-
-            // Call parent constructor.
-            ilGenerator.Emit(OpCodes.Call, EventInvocationBaseConstructorInfo);
+            // Store static part.
+            ilGenerator.Emit(OpCodes.Stsfld, staticPartFieldInfo);
 
             ilGenerator.Emit(OpCodes.Ret);
         }
@@ -174,17 +116,16 @@ namespace NProxy.Core
         /// Builds the constructor.
         /// </summary>
         /// <param name="typeBuilder">The type builder.</param>
-        /// <param name="name">The property name.</param>
-        /// <param name="methodFieldInfo">The method information static field information.</param>
+        /// <param name="staticPartFieldInfo">The static part field information.</param>
         /// <returns>The constructor information.</returns>
-        private static void BuildPropertyConstructor(TypeBuilder typeBuilder, string name, FieldInfo methodFieldInfo)
+        private static void BuildConstructor(TypeBuilder typeBuilder, FieldInfo staticPartFieldInfo)
         {
             // Define constructor.
             var constructorBuilder = typeBuilder.DefineConstructor(
                 MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName,
-                PropertyInvocationBaseConstructorInfo.CallingConvention,
-                new[] {typeof (object), typeof (bool), typeof (object[])},
-                new[] {"target", "isOverride", "parameters"});
+                InvocationBaseConstructorInfo.CallingConvention,
+                new[] {typeof (bool), typeof (object), typeof (object[])},
+                new[] {"isOverride", "target", "parameters"});
 
             // Implement constructor.
             var ilGenerator = constructorBuilder.GetILGenerator();
@@ -192,62 +133,20 @@ namespace NProxy.Core
             // Load this reference.
             ilGenerator.Emit(OpCodes.Ldarg_0);
 
-            // Load name.
-            ilGenerator.Emit(OpCodes.Ldstr, name);
-
-            // Load target object.
-            ilGenerator.Emit(OpCodes.Ldarg_1);
-
-            // Load method information.
-            ilGenerator.Emit(OpCodes.Ldsfld, methodFieldInfo);
+            // Load static part.
+            ilGenerator.Emit(OpCodes.Ldsfld, staticPartFieldInfo);
 
             // Load override flag.
+            ilGenerator.Emit(OpCodes.Ldarg_1);
+
+            // Load target object.
             ilGenerator.Emit(OpCodes.Ldarg_2);
 
             // Load parameters.
             ilGenerator.Emit(OpCodes.Ldarg_3);
 
             // Call parent constructor.
-            ilGenerator.Emit(OpCodes.Call, PropertyInvocationBaseConstructorInfo);
-
-            ilGenerator.Emit(OpCodes.Ret);
-        }
-
-        /// <summary>
-        /// Builds the constructor.
-        /// </summary>
-        /// <param name="typeBuilder">The type builder.</param>
-        /// <param name="methodFieldInfo">The method information static field information.</param>
-        /// <returns>The constructor information.</returns>
-        private static void BuildMethodConstructor(TypeBuilder typeBuilder, FieldInfo methodFieldInfo)
-        {
-            // Define constructor.
-            var constructorBuilder = typeBuilder.DefineConstructor(
-                MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName,
-                MethodInvocationBaseConstructorInfo.CallingConvention,
-                new[] {typeof (object), typeof (bool), typeof (object[])},
-                new[] {"target", "isOverride", "parameters"});
-
-            // Implement constructor.
-            var ilGenerator = constructorBuilder.GetILGenerator();
-
-            // Load this reference.
-            ilGenerator.Emit(OpCodes.Ldarg_0);
-
-            // Load target object.
-            ilGenerator.Emit(OpCodes.Ldarg_1);
-
-            // Load method information.
-            ilGenerator.Emit(OpCodes.Ldsfld, methodFieldInfo);
-
-            // Load override flag.
-            ilGenerator.Emit(OpCodes.Ldarg_2);
-
-            // Load parameters.
-            ilGenerator.Emit(OpCodes.Ldarg_3);
-
-            // Call parent constructor.
-            ilGenerator.Emit(OpCodes.Call, MethodInvocationBaseConstructorInfo);
+            ilGenerator.Emit(OpCodes.Call, InvocationBaseConstructorInfo);
 
             ilGenerator.Emit(OpCodes.Ret);
         }
@@ -261,7 +160,7 @@ namespace NProxy.Core
         /// <param name="isVirtual">A value indicating whether the method should be called virtually.</param>
         private static void BuildInvokeMethod(TypeBuilder typeBuilder, MethodInfo methodInfo, Type[] genericParameterTypes, bool isVirtual)
         {
-            var invokeMethodInfo = isVirtual ? MethodInvocationBaseInvokeVirtualMethodInfo : MethodInvocationBaseInvokeBaseMethodInfo;
+            var invokeMethodInfo = isVirtual ? InvocationBaseInvokeVirtualMethodInfo : InvocationBaseInvokeBaseMethodInfo;
 
             // Define method.
             var methodBuilder = typeBuilder.DefineMethod(invokeMethodInfo, false, true);
@@ -364,109 +263,35 @@ namespace NProxy.Core
         #region IInvocationTypeFactory Members
 
         /// <inheritdoc/>
-        public Type CreateInvocationType(EventInfo eventInfo, MethodInfo methodInfo)
+        public Type CreateType(IStaticPart staticPart)
         {
-            if (eventInfo == null)
-                throw new ArgumentNullException("eventInfo");
-
-            if (methodInfo == null)
-                throw new ArgumentNullException("methodInfo");
+            if (staticPart == null)
+                throw new ArgumentNullException("staticPart");
 
             // Define type.
-            var typeBuilder = _typeRepository.DefineType("EventInvocation", typeof (EventInvocationBase));
+            var typeBuilder = _typeRepository.DefineType("Invocation", typeof (InvocationBase));
 
             // Define generic parameters.
-            var genericParameterTypes = typeBuilder.DefineGenericParameters(methodInfo.GetGenericArguments());
+            var genericParameterTypes = typeBuilder.DefineGenericParameters(staticPart.Method.GetGenericArguments());
 
-            // Define method information static field.
-            var methodFieldInfo = typeBuilder.DefineField(
-                "TargetMethod",
-                typeof (MethodInfo),
+            // Define static part static field.
+            var staticFieldInfo = typeBuilder.DefineField(
+                "StaticPart",
+                typeof (IStaticPart),
                 FieldAttributes.Private | FieldAttributes.Static | FieldAttributes.InitOnly);
 
             // Build type initializer.
-            BuildTypeInitializer(typeBuilder, methodInfo, genericParameterTypes, methodFieldInfo);
+            BuildTypeInitializer(typeBuilder, staticPart, genericParameterTypes, staticFieldInfo);
 
             // Build constructor.
-            BuildEventConstructor(typeBuilder, eventInfo.Name, methodFieldInfo);
+            BuildConstructor(typeBuilder, staticFieldInfo);
 
             // Build base invoke method only for non abstract and overrideable methods.
-            if (!methodInfo.IsAbstract && methodInfo.CanOverride())
-                BuildInvokeMethod(typeBuilder, methodInfo, genericParameterTypes, false);
+            if (!staticPart.Method.IsAbstract && staticPart.Method.CanOverride())
+                BuildInvokeMethod(typeBuilder, staticPart.Method, genericParameterTypes, false);
 
             // Build virtual invoke method.
-            BuildInvokeMethod(typeBuilder, methodInfo, genericParameterTypes, true);
-
-            return typeBuilder.CreateType();
-        }
-
-        /// <inheritdoc/>
-        public Type CreateInvocationType(PropertyInfo propertyInfo, MethodInfo methodInfo)
-        {
-            if (propertyInfo == null)
-                throw new ArgumentNullException("propertyInfo");
-
-            if (methodInfo == null)
-                throw new ArgumentNullException("methodInfo");
-
-            // Define type.
-            var typeBuilder = _typeRepository.DefineType("PropertyInvocation", typeof (PropertyInvocationBase));
-
-            // Define generic parameters.
-            var genericParameterTypes = typeBuilder.DefineGenericParameters(methodInfo.GetGenericArguments());
-
-            // Define method information static field.
-            var methodFieldInfo = typeBuilder.DefineField(
-                "TargetMethod",
-                typeof (MethodInfo),
-                FieldAttributes.Private | FieldAttributes.Static | FieldAttributes.InitOnly);
-
-            // Build type initializer.
-            BuildTypeInitializer(typeBuilder, methodInfo, genericParameterTypes, methodFieldInfo);
-
-            // Build constructor.
-            BuildPropertyConstructor(typeBuilder, propertyInfo.Name, methodFieldInfo);
-
-            // Build base invoke method only for non abstract and overrideable methods.
-            if (!methodInfo.IsAbstract && methodInfo.CanOverride())
-                BuildInvokeMethod(typeBuilder, methodInfo, genericParameterTypes, false);
-
-            // Build virtual invoke method.
-            BuildInvokeMethod(typeBuilder, methodInfo, genericParameterTypes, true);
-
-            return typeBuilder.CreateType();
-        }
-
-        /// <inheritdoc/>
-        public Type CreateInvocationType(MethodInfo methodInfo)
-        {
-            if (methodInfo == null)
-                throw new ArgumentNullException("methodInfo");
-
-            // Define type.
-            var typeBuilder = _typeRepository.DefineType("MethodInvocation", typeof (MethodInvocationBase));
-
-            // Define generic parameters.
-            var genericParameterTypes = typeBuilder.DefineGenericParameters(methodInfo.GetGenericArguments());
-
-            // Define method information static field.
-            var methodFieldInfo = typeBuilder.DefineField(
-                "TargetMethod",
-                typeof (MethodInfo),
-                FieldAttributes.Private | FieldAttributes.Static | FieldAttributes.InitOnly);
-
-            // Build type initializer.
-            BuildTypeInitializer(typeBuilder, methodInfo, genericParameterTypes, methodFieldInfo);
-
-            // Build constructor.
-            BuildMethodConstructor(typeBuilder, methodFieldInfo);
-
-            // Build base invoke method only for non abstract and overrideable methods.
-            if (!methodInfo.IsAbstract && methodInfo.CanOverride())
-                BuildInvokeMethod(typeBuilder, methodInfo, genericParameterTypes, false);
-
-            // Build virtual invoke method.
-            BuildInvokeMethod(typeBuilder, methodInfo, genericParameterTypes, true);
+            BuildInvokeMethod(typeBuilder, staticPart.Method, genericParameterTypes, true);
 
             return typeBuilder.CreateType();
         }

@@ -15,11 +15,10 @@
 //
 
 using System;
-using NProxy.Core.Intercept;
 
 namespace NProxy.Core.Benchmark
 {
-    internal sealed class NProxyInterceptor : IMemberInterceptor
+    internal sealed class NProxyInterceptor : IInterceptor
     {
         private readonly object _target;
 
@@ -31,47 +30,9 @@ namespace NProxy.Core.Benchmark
             _target = target;
         }
 
-        #region IEventInterceptor Members
+        #region IInterceptor Members
 
-        public object Add(IEventInvocation invocation)
-        {
-            return invocation.Proceed(_target);
-        }
-
-        public object Remove(IEventInvocation invocation)
-        {
-            return invocation.Proceed(_target);
-        }
-
-        public object Raise(IEventInvocation invocation)
-        {
-            return invocation.Proceed(_target);
-        }
-
-        public object Other(IEventInvocation invocation)
-        {
-            return invocation.Proceed(_target);
-        }
-
-        #endregion
-
-        #region IPropertyInterceptor Members
-
-        public object Get(IPropertyInvocation invocation)
-        {
-            return invocation.Proceed(_target);
-        }
-
-        public object Set(IPropertyInvocation invocation)
-        {
-            return invocation.Proceed(_target);
-        }
-
-        #endregion
-
-        #region IMethodInterceptor Members
-
-        public object Invoke(IMethodInvocation invocation)
+        public object Intercept(IInvocation invocation)
         {
             return invocation.Proceed(_target);
         }

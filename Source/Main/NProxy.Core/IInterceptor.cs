@@ -14,12 +14,19 @@
 // limitations under the License.
 //
 
-namespace NProxy.Core.Aop
+namespace NProxy.Core
 {
     /// <summary>
-    /// Defines an advice.
+    /// Defines an interceptor.
     /// </summary>
-    public interface IAdvice
+    public interface IInterceptor
     {
+        /// <summary>
+        /// Implement this method to perform extra treatments before and after the invocation.
+        /// Polite implementations would certainly like to invoke <see cref="IInvocation.Proceed()"/>.
+        /// </summary>
+        /// <param name="invocation">The invocation.</param>
+        /// <returns>The result of the call to <see cref="IInvocation.Proceed()"/>, might be intercepted by the interceptor.</returns>
+        object Intercept(IInvocation invocation);
     }
 }

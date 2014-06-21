@@ -16,11 +16,10 @@
 
 using System;
 using System.Collections.Generic;
-using LinFu.Proxy.Interfaces;
 
 namespace NProxy.Core.Benchmark
 {
-    internal sealed class LinFuProxyCache : IProxyCache
+    internal sealed class LinFuProxyCache : LinFu.Proxy.Interfaces.IProxyCache
     {
         #region IProxyCache Members
 

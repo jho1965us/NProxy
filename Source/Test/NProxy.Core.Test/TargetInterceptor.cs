@@ -15,11 +15,10 @@
 //
 
 using System;
-using NProxy.Core.Intercept;
 
 namespace NProxy.Core.Test
 {
-    internal sealed class TargetInterceptor : IMemberInterceptor
+    internal sealed class TargetInterceptor : IInterceptor
     {
         private readonly Func<object, object> _targetFactory;
 
@@ -31,56 +30,13 @@ namespace NProxy.Core.Test
             _targetFactory = targetFactory;
         }
 
-        private object HandleInvocation(IJoinpoint invocation)
+        #region IInterceptor Members
+
+        public object Intercept(IInvocation invocation)
         {
             var newTarget = _targetFactory(invocation.This);
 
             return invocation.Proceed(newTarget);
-        }
-
-        #region IEventInterceptor Members
-
-        public object Add(IEventInvocation invocation)
-        {
-            return HandleInvocation(invocation);
-        }
-
-        public object Remove(IEventInvocation invocation)
-        {
-            return HandleInvocation(invocation);
-        }
-
-        public object Raise(IEventInvocation invocation)
-        {
-            return HandleInvocation(invocation);
-        }
-
-        public object Other(IEventInvocation invocation)
-        {
-            return HandleInvocation(invocation);
-        }
-
-        #endregion
-
-        #region IPropertyInterceptor Members
-
-        public object Get(IPropertyInvocation invocation)
-        {
-            return HandleInvocation(invocation);
-        }
-
-        public object Set(IPropertyInvocation invocation)
-        {
-            return HandleInvocation(invocation);
-        }
-
-        #endregion
-
-        #region IMethodInterceptor Members
-
-        public object Invoke(IMethodInvocation invocation)
-        {
-            return HandleInvocation(invocation);
         }
 
         #endregion

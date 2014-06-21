@@ -14,36 +14,46 @@
 // limitations under the License.
 //
 
-using System;
-using System.Reflection;
-
-namespace NProxy.Core.Aop
+namespace NProxy.Core
 {
     /// <summary>
-    /// Defines a method matcher.
+    /// Defines all method kinds.
     /// </summary>
-    public interface IMethodMatcher
+    public enum MethodKind
     {
         /// <summary>
-        /// 
+        /// An event add method.
         /// </summary>
-        bool IsRuntime { get; }
+        Add,
 
         /// <summary>
-        /// 
+        /// An event remove method.
         /// </summary>
-        /// <param name="methodInfo"></param>
-        /// <param name="targetType"></param>
-        /// <returns></returns>
-        bool Matches(MethodInfo methodInfo, Type targetType);
+        Remove,
 
         /// <summary>
-        /// 
+        /// An event raise method.
         /// </summary>
-        /// <param name="methodInfo"></param>
-        /// <param name="targetType"></param>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
-        bool Matches(MethodInfo methodInfo, Type targetType, Object[] parameters);
+        Raise,
+
+        /// <summary>
+        /// An event other method.
+        /// </summary>
+        Other,
+
+        /// <summary>
+        /// A property get method.
+        /// </summary>
+        Get,
+
+        /// <summary>
+        /// A property set method.
+        /// </summary>
+        Set,
+
+        /// <summary>
+        /// An invoke method.
+        /// </summary>
+        Invoke
     }
 }

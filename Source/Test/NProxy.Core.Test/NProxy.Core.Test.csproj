@@ -45,7 +45,6 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CountingInterceptor.cs" />
     <Compile Include="GetParametersInterceptor.cs" />
     <Compile Include="Internal\Caching\CacheTestFixture.cs" />
     <Compile Include="Internal\Caching\LockOnWriteCacheTestFixture.cs" />

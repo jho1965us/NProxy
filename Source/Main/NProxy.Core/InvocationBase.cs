@@ -18,22 +18,17 @@ using System;
 using System.Reflection;
 using NProxy.Core.Internal;
 
-namespace NProxy.Core.Intercept
+namespace NProxy.Core
 {
     /// <summary>
     /// Represents a method invocation base.
     /// </summary>
-    internal abstract class MethodInvocationBase : IMethodInvocation
+    internal abstract class InvocationBase : IInvocation
     {
         /// <summary>
-        /// The target object.
+        /// The static part.
         /// </summary>
-        private readonly object _target;
-
-        /// <summary>
-        /// The declaring method information.
-        /// </summary>
-        private readonly MethodInfo _methodInfo;
+        private readonly IStaticPart _staticPart;
 
         /// <summary>
         /// A value indicating whether the method is an override.
@@ -41,39 +36,37 @@ namespace NProxy.Core.Intercept
         private readonly bool _isOverride;
 
         /// <summary>
+        /// The target object.
+        /// </summary>
+        private readonly object _target;
+
+        /// <summary>
         /// The parameters.
         /// </summary>
         private readonly object[] _parameters;
 
         /// <summary>
-        /// The declaring type.
+        /// Initializes a new instance of the <see cref="InvocationBase"/> class.
         /// </summary>
-        protected readonly Type DeclaringType;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MethodInvocationBase"/> class.
-        /// </summary>
-        /// <param name="target">The target object.</param>
-        /// <param name="methodInfo">The declaring method information.</param>
+        /// <param name="staticPart">The static part.</param>
         /// <param name="isOverride">A value indicating whether the method is an override.</param>
+        /// <param name="target">The target object.</param>
         /// <param name="parameters">The parameters.</param>
-        protected MethodInvocationBase(object target, MethodInfo methodInfo, bool isOverride, object[] parameters)
+        protected InvocationBase(IStaticPart staticPart, bool isOverride, object target, object[] parameters)
         {
+            if (staticPart == null)
+                throw new ArgumentNullException("staticPart");
+
             if (target == null)
                 throw new ArgumentNullException("target");
-
-            if (methodInfo == null)
-                throw new ArgumentNullException("methodInfo");
 
             if (parameters == null)
                 throw new ArgumentNullException("parameters");
 
-            _target = target;
-            _methodInfo = methodInfo;
+            _staticPart = staticPart;
             _isOverride = isOverride;
+            _target = target;
             _parameters = parameters;
-
-            DeclaringType = methodInfo.DeclaringType;
         }
 
         /// <summary>
@@ -95,38 +88,24 @@ namespace NProxy.Core.Intercept
         /// <returns>The return value.</returns>
         protected abstract object InvokeVirtual(object target, object[] parameters);
 
-        #region IMethodInvocation Members
-
-        /// <inheritdoc/>
-        public MethodInfo Method
-        {
-            get { return _methodInfo; }
-        }
-
-        #endregion
-
         #region IInvocation Members
 
         /// <inheritdoc/>
-        public object[] Parameters
+        public IStaticPart StaticPart
         {
-            get { return _parameters; }
-        }
-
-        #endregion
-
-        #region IJoinpoint Members
-
-        /// <inheritdoc/>
-        public MemberInfo StaticPart
-        {
-            get { return _methodInfo; }
+            get { return _staticPart; }
         }
 
         /// <inheritdoc/>
         public object This
         {
             get { return _target; }
+        }
+
+        /// <inheritdoc/>
+        public object[] Parameters
+        {
+            get { return _parameters; }
         }
 
         /// <inheritdoc/>
@@ -156,7 +135,7 @@ namespace NProxy.Core.Intercept
             // Check target type.
             var targetType = target.GetType();
 
-            if (!DeclaringType.IsAssignableFrom(targetType))
+            if (!_staticPart.DeclaringType.IsAssignableFrom(targetType))
                 throw new TargetException(Resources.MethodNotDeclaredOrInherited);
 
             // Invoke method on target object.

@@ -16,7 +16,6 @@
 
 using System.Diagnostics;
 using System.Reflection;
-using Castle.DynamicProxy;
 using NProxy.Core.Benchmark.Reporting;
 using NProxy.Core.Benchmark.Types;
 using NUnit.Framework;
@@ -30,7 +29,7 @@ namespace NProxy.Core.Benchmark
 
         static CastlePerformanceTestFixture()
         {
-            var type = typeof (ProxyGenerator);
+            var type = typeof (Castle.DynamicProxy.ProxyGenerator);
 
             AssemblyName = type.Assembly.GetName();
         }
@@ -39,8 +38,8 @@ namespace NProxy.Core.Benchmark
         public void SetUp()
         {
             // Ensure all classes are loaded and initialized.
-            var proxyGenerator = new ProxyGenerator();
-            var interceptors = new IInterceptor[] {new CastleInterceptor()};
+            var proxyGenerator = new Castle.DynamicProxy.ProxyGenerator();
+            var interceptors = new Castle.DynamicProxy.IInterceptor[] {new CastleInterceptor()};
             var target = new Standard();
 
             proxyGenerator.CreateInterfaceProxyWithTarget<IStandard>(target, interceptors);
@@ -49,13 +48,13 @@ namespace NProxy.Core.Benchmark
         [TestCase(1000)]
         public void ProxyGenerationTest(int iterations)
         {
-            var interceptors = new IInterceptor[] {new CastleInterceptor()};
+            var interceptors = new Castle.DynamicProxy.IInterceptor[] {new CastleInterceptor()};
             var target = new Standard();
             var stopwatch = new Stopwatch();
 
             for (var i = 0; i < iterations; i++)
             {
-                var proxyGenerator = new ProxyGenerator();
+                var proxyGenerator = new Castle.DynamicProxy.ProxyGenerator();
 
                 stopwatch.Start();
 
@@ -70,13 +69,13 @@ namespace NProxy.Core.Benchmark
         [TestCase(1000)]
         public void ProxyGenerationWithGenericParameterTest(int iterations)
         {
-            var interceptors = new IInterceptor[] {new CastleInterceptor()};
+            var interceptors = new Castle.DynamicProxy.IInterceptor[] {new CastleInterceptor()};
             var target = new Generic();
             var stopwatch = new Stopwatch();
 
             for (var i = 0; i < iterations; i++)
             {
-                var proxyGenerator = new ProxyGenerator();
+                var proxyGenerator = new Castle.DynamicProxy.ProxyGenerator();
 
                 stopwatch.Start();
 
@@ -91,8 +90,8 @@ namespace NProxy.Core.Benchmark
         [TestCase(1000000)]
         public void ProxyInstantiationTest(int iterations)
         {
-            var proxyGenerator = new ProxyGenerator();
-            var interceptors = new IInterceptor[] {new CastleInterceptor()};
+            var proxyGenerator = new Castle.DynamicProxy.ProxyGenerator();
+            var interceptors = new Castle.DynamicProxy.IInterceptor[] {new CastleInterceptor()};
             var target = new Standard();
             var stopwatch = new Stopwatch();
 
@@ -113,8 +112,8 @@ namespace NProxy.Core.Benchmark
         [TestCase(1000000)]
         public void ProxyInstantiationWithGenericParameterTest(int iterations)
         {
-            var proxyGenerator = new ProxyGenerator();
-            var interceptors = new IInterceptor[] {new CastleInterceptor()};
+            var proxyGenerator = new Castle.DynamicProxy.ProxyGenerator();
+            var interceptors = new Castle.DynamicProxy.IInterceptor[] {new CastleInterceptor()};
             var target = new Generic();
             var stopwatch = new Stopwatch();
 
@@ -135,8 +134,8 @@ namespace NProxy.Core.Benchmark
         [TestCase(10000000)]
         public void MethodInvocationTest(int iterations)
         {
-            var proxyGenerator = new ProxyGenerator();
-            var interceptors = new IInterceptor[] {new CastleInterceptor()};
+            var proxyGenerator = new Castle.DynamicProxy.ProxyGenerator();
+            var interceptors = new Castle.DynamicProxy.IInterceptor[] {new CastleInterceptor()};
             var target = new Standard();
             var proxy = proxyGenerator.CreateInterfaceProxyWithTarget<IStandard>(target, interceptors);
             var stopwatch = new Stopwatch();
@@ -156,8 +155,8 @@ namespace NProxy.Core.Benchmark
         [TestCase(10000000)]
         public void MethodInvocationWithGenericParameterTest(int iterations)
         {
-            var proxyGenerator = new ProxyGenerator();
-            var interceptors = new IInterceptor[] {new CastleInterceptor()};
+            var proxyGenerator = new Castle.DynamicProxy.ProxyGenerator();
+            var interceptors = new Castle.DynamicProxy.IInterceptor[] {new CastleInterceptor()};
             var target = new Generic();
             var proxy = proxyGenerator.CreateInterfaceProxyWithTarget<IGeneric>(target, interceptors);
             var stopwatch = new Stopwatch();
